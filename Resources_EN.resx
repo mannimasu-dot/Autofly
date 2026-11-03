@@ -1,317 +1,879 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-	<xsd:element name="root" msdata:IsDataSet="true">
-	  <xsd:complexType>
-		<xsd:choice maxOccurs="unbounded">
-		  <xsd:element name="metadata">
-			<xsd:complexType>
-			  <xsd:sequence>
-				<xsd:element name="value" type="xsd:string" minOccurs="0" />
-			  </xsd:sequence>
-			  <xsd:attribute name="name" use="required" type="xsd:string" />
-			  <xsd:attribute name="type" type="xsd:string" />
-			  <xsd:attribute name="mimetype" type="xsd:string" />
-			  <xsd:attribute ref="xml:space" />
-			</xsd:complexType>
-		  </xsd:element>
-		  <xsd:element name="assembly">
-			<xsd:complexType>
-			  <xsd:attribute name="alias" type="xsd:string" />
-			  <xsd:attribute name="name" type="xsd:string" />
-			</xsd:complexType>
-		  </xsd:element>
-		  <xsd:element name="data">
-			<xsd:complexType>
-			  <xsd:sequence>
-				<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-				<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-			  </xsd:sequence>
-			  <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-			  <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-			  <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-			  <xsd:attribute ref="xml:space" />
-			</xsd:complexType>
-		  </xsd:element>
-		  <xsd:element name="resheader">
-			<xsd:complexType>
-			  <xsd:sequence>
-				<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-			  </xsd:sequence>
-			  <xsd:attribute name="name" type="xsd:string" use="required" />
-			</xsd:complexType>
-		  </xsd:element>
-		</xsd:choice>
-	  </xsd:complexType>
-	</xsd:element>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
-	<value>text/microsoft-resx</value>
+    <value>text/microsoft-resx</value>
   </resheader>
   <resheader name="version">
-	<value>2.0</value>
+    <value>2.0</value>
   </resheader>
   <resheader name="reader">
-	<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-	<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="autoStartDialog.AccessibleDescription" xml:space="preserve"><value>Readiness check or takeoff roll failed. During the takeoff roll, idle thrust and full braking remain active until a complete stop is confirmed. OK requests an abort followed by the release of controls. No certified takeoff or braking performance data.</value></data>
-  <data name="AutoLand.Land" xml:space="preserve"><value>Auto-Landing</value></data>
-  <data name="AutoLand.Abort" xml:space="preserve"><value>Abort landing</value></data>
-  <data name="AutoLand.Description" xml:space="preserve"><value>Automatic landing at a nearby airport.</value></data>
-  <data name="AutoLand.Loading" xml:space="preserve"><value>AutoLand: Searching for airports near the current aircraft position</value></data>
-  <data name="AutoLand.SearchingNearby" xml:space="preserve"><value>[AutoLand] Searching for airports within {0:N0} NM</value></data>
-  <data name="AutoLand.NoNearbyAirports" xml:space="preserve"><value>AutoLand: No nearby airports found even after three searches (25, 50 and 100 NM). Planning can be cancelled.</value></data>
-  <data name="AutoLand.PositionUnavailable" xml:space="preserve"><value>No valid current aircraft position available for the nearby airport search</value></data>
-  <data name="AutoLand.Unavailable" xml:space="preserve"><value>AutoLand: Data is missing or could not be loaded. Planning remains active; landing can still be aborted.</value></data>
-  <data name="AutoLand.Failure" xml:space="preserve"><value>AutoLand: {0}. Planning remains active; landing can still be aborted.</value></data>
-  <data name="AutoLand.Choose" xml:space="preserve"><value>Nearby airports, please select:</value></data>
-  <data name="AutoLand.AirportListDescription" xml:space="preserve"><value>Airports with fully loaded usable runways, nearest first. Water runways are only available for aircraft with floats. Airports without runways are also shown for helicopters. The list shows the identifier, full name, distance in nautical miles from the aircraft position at the time of the search, and the length of the longest usable runway in meters. Runway length is left blank for airports without a runway.</value></data>
-  <data name="AutoLand.Icao" xml:space="preserve"><value>Identifier</value></data>
-  <data name="AutoLand.Name" xml:space="preserve"><value>Airport name</value></data>
-  <data name="AutoLand.Data" xml:space="preserve"><value>Data</value></data>
-  <data name="AutoLand.Distance" xml:space="preserve"><value>Distance (NM)</value></data>
-  <data name="AutoLand.LongestRunwayLength" xml:space="preserve"><value>Longest runway (m)</value></data>
-  <data name="AutoLand.Queued" xml:space="preserve"><value>Queued for loading</value></data>
-  <data name="AutoLand.Waiting" xml:space="preserve"><value>Loading …</value></data>
-  <data name="AutoLand.Timeout" xml:space="preserve"><value>No simulator response within 15 seconds</value></data>
-  <data name="AutoLand.MissingName" xml:space="preserve"><value>Name unavailable</value></data>
-  <data name="AutoLand.Ready" xml:space="preserve"><value>Available</value></data>
-  <data name="AutoLand.Missing" xml:space="preserve"><value>Data missing – abort available</value></data>
-  <data name="AutoLand.Ok" xml:space="preserve"><value>OK</value></data>
-  <data name="AutoLand.Cancel" xml:space="preserve"><value>Cancel</value></data>
-  <data name="AutoLand.SelectionRequired" xml:space="preserve"><value>Please select an airport with complete name and runway data. If the aircraft position or model speeds are missing, you can check again with OK once the data has arrived.</value></data>
-  <data name="AutoLand.RunwayRequiredForPlan" xml:space="preserve"><value>This airport is listed for helicopters without a runway. However, the current approach marking requires an actual runway; helicopter approach planning has not yet been implemented.</value></data>
-  <data name="AutoLand.Marked" xml:space="preserve"><value>[AutoLand] {0}, runway {1} marked</value></data>
-  <data name="AutoLand.Cancelled" xml:space="preserve"><value>[AutoLand] Map markers removed and mode switches released.</value></data>
-  <data name="AutoLand.CancelMapFailure" xml:space="preserve"><value>AutoLand ended and mode switches released. Removal of its markers could not be confirmed due to a map error.</value></data>
-  <data name="AutoLand.MapUnavailable" xml:space="preserve"><value>The map is not yet available. No flight control</value></data>
-  <data name="Autostart.BlockedTitle" xml:space="preserve"><value>Automatic takeoff blocked:</value></data>
-  <data name="Autostart.BlockedDescription" xml:space="preserve"><value>Readiness check or takeoff roll failed. During the takeoff roll, idle thrust and full braking remain active until a complete stop is confirmed. OK requests an abort followed by the release of controls. No certified takeoff or braking performance data.</value></data>
-  <data name="Autostart.BlockedInformationTitle" xml:space="preserve"><value>Failure reasons and airport data</value></data>
-  <data name="Autostart.Acknowledge" xml:space="preserve"><value>OK</value></data>
-  <data name="Autostart.AcknowledgeDescription" xml:space="preserve"><value>Requests an abort. After a takeoff roll, brakes and steering are only released once a complete stop is confirmed.</value></data>
-  <data name="Autostart.Check_OnGround" xml:space="preserve"><value>Aircraft on the ground</value></data>
-  <data name="Autostart.Check_CurrentTelemetry" xml:space="preserve"><value>Current telemetry</value></data>
-  <data name="Autostart.Check_EnginesRunning" xml:space="preserve"><value>Engines running</value></data>
-  <data name="Autostart.Check_TakeoffProfile" xml:space="preserve"><value>Provisional takeoff profile</value></data>
-  <data name="Autostart.Check_RunwayPosition" xml:space="preserve"><value>Position on runway</value></data>
-  <data name="Autostart.Check_RunwayHeading" xml:space="preserve"><value>Heading on runway</value></data>
-  <data name="Autostart.Passed" xml:space="preserve"><value>OK</value></data>
-  <data name="Autostart.Failed" xml:space="preserve"><value>NOK</value></data>
-  <data name="Autostart.Pending" xml:space="preserve"><value>Not yet evaluated.</value></data>
-  <data name="Autostart.Unavailable" xml:space="preserve"><value>unavailable</value></data>
-  <data name="Autostart.StartRoll" xml:space="preserve"><value>Phase 2: Build takeoff thrust, monitor the runway centerline and remaining runway.</value></data>
-  <data name="Autostart.RunwayReserveConfiguration" xml:space="preserve"><value>Provisional remaining-runway abort threshold: {0:F1} m. Not a calculated or guaranteed stopping distance.</value></data>
-  <data name="Autostart.VrBraking" xml:space="preserve"><value>Takeoff roll aborted: Idle thrust and both wheel brakes fully applied until a complete stop is confirmed.</value></data>
-  <data name="Autostart.RollStopped" xml:space="preserve"><value>Takeoff roll aborted and complete stop confirmed. Idle thrust and full braking remain active until controls are released.</value></data>
-  <data name="Autostart.AbortStopped" xml:space="preserve"><value>Aborted takeoff roll: Groundspeed confirms a complete stop. Idle thrust and full braking remain active until acknowledgement.</value></data>
-  <data name="Autostart.CancelledBraking" xml:space="preserve"><value>Takeoff aborted: Idle thrust and both wheel brakes fully applied. Controls are only released after a complete stop is confirmed.</value></data>
-  <data name="Autostart.RunwayReserve" xml:space="preserve"><value>Takeoff aborted: Provisional remaining-runway reserve reached. Idle thrust and full braking; this reserve does not guarantee a safe stopping distance.</value></data>
-  <data name="Autostart.RollTimeout" xml:space="preserve"><value>Takeoff aborted: Ground phase exceeded 120 seconds. Idle thrust and full braking.</value></data>
-  <data name="Autostart.RollTelemetryOrTracking" xml:space="preserve"><value>Takeoff aborted: Telemetry/model invalid or stale, aircraft has left the runway, lateral distance from the centerline exceeds 40 % of the runway width, or heading deviation exceeds 20°. Idle thrust and full braking.</value></data>
-  <data name="Autostart.RollInterlock" xml:space="preserve"><value>Takeoff aborted: An integration prerequisite is no longer met. Idle thrust and full braking, provided the simulator connection is available.</value></data>
-  <data name="Autostart.AircraftChanged" xml:space="preserve"><value>Takeoff aborted: Aircraft/session identity has changed. No automatic restart; idle thrust and full braking.</value></data>
-  <data name="Autostart.EngineFailure" xml:space="preserve"><value>Takeoff aborted on the ground: Engine operation is no longer confirmed by current data. Idle thrust, full braking and neutral control axes are requested.</value></data>
-  <data name="Autostart.DetailFormat" xml:space="preserve"><value>{0}: {1}</value></data>
-  <data name="Autostart.Detail_MissingValue" xml:space="preserve"><value>Value not yet received.</value></data>
-  <data name="Autostart.Detail_InvalidTimestamp" xml:space="preserve"><value>Measurement timestamp is missing or is not a UTC timestamp.</value></data>
-  <data name="Autostart.Detail_FutureTimestamp" xml:space="preserve"><value>Measurement timestamp is in the future.</value></data>
-  <data name="Autostart.Detail_StaleTelemetry" xml:space="preserve"><value>Telemetry is more than two seconds old.</value></data>
-  <data name="Autostart.Detail_InvalidValue" xml:space="preserve"><value>Value is invalid or outside the permitted range.</value></data>
-  <data name="Autostart.Detail_AircraftNotOnGround" xml:space="preserve"><value>Aircraft is not on the ground.</value></data>
-  <data name="Autostart.Detail_EngineNotRunning" xml:space="preserve"><value>Engine is not running.</value></data>
-  <data name="Autostart.Detail_InconsistentProfile" xml:space="preserve"><value>Model profile speeds are inconsistent.</value></data>
-  <data name="Autostart.Detail_RunwayDataPending" xml:space="preserve"><value>The runway query has not yet completed.</value></data>
-  <data name="Autostart.Detail_RunwayDataUnavailable" xml:space="preserve"><value>No complete runway data available.</value></data>
-  <data name="Autostart.Detail_InvalidRunwayData" xml:space="preserve"><value>Runway data is invalid or incomplete.</value></data>
-  <data name="Autostart.Detail_RunwayModelMismatch" xml:space="preserve"><value>Runway data does not belong to the current model or takeoff attempt.</value></data>
-  <data name="Autostart.Detail_AircraftOutsideRunway" xml:space="preserve"><value>The aircraft is outside the available runway areas.</value></data>
-  <data name="Autostart.Detail_RunwayHeadingMismatch" xml:space="preserve"><value>The aircraft's true heading exceeds the permitted runway heading deviation (readiness check 3°, takeoff roll 20°).</value></data>
-  <data name="Autostart.Detail_RunwayHeadingRequiresPosition" xml:space="preserve"><value>Heading cannot be checked because the aircraft is not on any available runway area.</value></data>
-  <data name="Autostart.Detail_PhaseNotReady" xml:space="preserve"><value>The current phase does not permit readiness approval.</value></data>
-  <data name="Autostart.TakeoffName" xml:space="preserve"><value>Auto-Takeoff</value></data>
-  <data name="Autostart.TakeoffDescription" xml:space="preserve"><value>After six takeoff approvals: Thrust ramp, centerline guidance, rotation at model VR and stabilized initial climb. Handover to the local AP/ALT/HDG/LVL/thrust controllers once climb above 50 ft AGL and at least model VY are confirmed. Provisional remaining-runway reserve defaults to 200 m; no stopping guarantee. Terrain following and waypoint tracking remain off.</value></data>
-  <data name="Autostart.AbortStart" xml:space="preserve"><value>Abort takeoff</value></data>
-  <data name="Autostart.AbortStartDescription" xml:space="preserve"><value>Aborts the readiness check. On the ground: Idle thrust and full braking until a complete stop is confirmed. In flight or if ground status is uncertain after rotation: Direct control axes neutral, thrust unchanged, take over manually immediately. Previously active modes remain off.</value></data>
-  <data name="Autostart.Disconnected" xml:space="preserve"><value>Autostart blocked: Simulator connection or local controller unavailable.</value></data>
-  <data name="Autostart.DataUnavailable" xml:space="preserve"><value>Autostart blocked: The coherent model profile and telemetry dataset is unavailable. Abort and check the connection.</value></data>
-  <data name="Autostart.ControlFailure" xml:space="preserve"><value>Autostart control command failed. On the ground, idle thrust and full braking are requested. In flight: Take over manually immediately, no automatic thrust reduction or full braking. Actuator response is not guaranteed.</value></data>
-  <data name="Autostart.AutopilotUnknown" xml:space="preserve"><value>Autostart blocked: Current confirmation of “Simulator autopilot OFF” is missing.</value></data>
-  <data name="Autostart.AutopilotStillOn" xml:space="preserve"><value>Autostart blocked: Simulator autopilot is on. Current OFF confirmation is required.</value></data>
-  <data name="Autostart.MapUnavailable" xml:space="preserve"><value>Autostart blocked: The existing WebView map is not yet available.</value></data>
-  <data name="Autostart.RelocationBlocked" xml:space="preserve"><value>Autostart and relocation are mutually exclusive. End or abort the active operation first.</value></data>
-  <data name="Autostart.InterlockReady" xml:space="preserve"><value>Interlocks cleared</value></data>
-  <data name="Autostart.ReadinessTimeout" xml:space="preserve"><value>Autostart blocked: The readiness check was not completed within 45 seconds.</value></data>
-  <data name="Autostart.ReadinessFailed" xml:space="preserve"><value>Autostart blocked: Not all prerequisites are met.</value></data>
-  <data name="Autostart.Aborted" xml:space="preserve"><value>Autostart aborted. Controls restored; all competing modes remain off.</value></data>
-  <data name="Autostart.StartGateBlocked" xml:space="preserve"><value>Auto-Takeoff blocked: No current confirmation that the aircraft is on the ground, or takeoff conditions are not met. Existing flight controllers remain unchanged.</value></data>
-  <data name="Autostart.FlightRotation" xml:space="preserve"><value>Phase 3: Model VR reached. Raise the nose in a controlled manner, correct bank and confirm liftoff.</value></data>
-  <data name="Autostart.FlightInitialClimb" xml:space="preserve"><value>Phase 4: Initial climb. Stabilize model VY, climb rate and attitude for handover.</value></data>
-  <data name="Autostart.FlightHandoverPreparing" xml:space="preserve"><value>Phase 5: Prepare handover. Neutral control axes, released wheel brakes and 90 % thrust requested; readback values are being checked.</value></data>
-  <data name="Autostart.FlightHandoverComplete" xml:space="preserve"><value>Autostart completed. Local AP, ALT, HDG, LVL and thrust controllers take over. Target altitude: Current altitude +500 ft; target heading: Magnetic runway heading.</value></data>
-  <data name="Autostart.FlightHandoverFailed" xml:space="preserve"><value>Handover to the local flight controllers failed. Take over manually immediately! Direct control axes are being neutralized; no automatic thrust reduction or full braking.</value></data>
-  <data name="Autostart.FlightManualTakeover" xml:space="preserve"><value>Automatic takeoff ended. Take over manually immediately! Direct control axes are being neutralized; thrust remains unchanged and wheel brakes are released.</value></data>
-  <data name="Autostart.FlightTelemetryInvalid" xml:space="preserve"><value>Flight, engine or model data invalid or stale. On the ground: Takeoff abort with idle thrust and full braking. In flight: Take over manually immediately, no automatic thrust reduction or full braking.</value></data>
-  <data name="Autostart.FlightGroundContact" xml:space="preserve"><value>Ground contact detected after a liftoff signal. Automatic takeoff ended; take over manually immediately! No automatic thrust reduction or full braking.</value></data>
-  <data name="Autostart.FlightTimeout" xml:space="preserve"><value>Time limit for rotation (30 s) or initial climb (120 s) exceeded. On the ground: Takeoff abort with idle thrust and full braking. In flight: Take over manually immediately!</value></data>
-  <data name="Autostart.AirportInformationTitle" xml:space="preserve"><value>Airport and runway data</value></data>
-  <data name="Autostart.AirportInformationWaitingPosition" xml:space="preserve"><value>Waiting for a new valid position …</value></data>
-  <data name="Autostart.AirportInformationLoadingAirports" xml:space="preserve"><value>Retrieving airports …</value></data>
-  <data name="Autostart.AirportInformationLoadingRunways" xml:space="preserve"><value>Retrieving airport and runway data for {0} …</value></data>
-  <data name="Autostart.AirportInformationDisconnected" xml:space="preserve"><value>No simulator connection for retrieving airports.</value></data>
-  <data name="Autostart.AirportInformationTimeout" xml:space="preserve"><value>Airport information request timed out. OK aborts this takeoff attempt.</value></data>
-  <data name="Autostart.AirportInformationRequestFailed" xml:space="preserve"><value>Could not retrieve airport information.</value></data>
-  <data name="Autostart.AirportInformationDefinitionFailed" xml:space="preserve"><value>The facility definition failed. A new simulator connection is required before trying again.</value></data>
-  <data name="Autostart.AirportInformationIncomplete" xml:space="preserve"><value>The received airport or runway data is incomplete or invalid.</value></data>
-  <data name="Autostart.AirportInformationNoAirports" xml:space="preserve"><value>No airports received.</value></data>
-  <data name="Autostart.AirportInformationRunwaysHeading" xml:space="preserve"><value>All physical runways (positions are at the runway centers):</value></data>
-  <data name="Autostart.AirportInformationNoRunways" xml:space="preserve"><value>No physical runways were reported for this airport.</value></data>
-  <data name="Autostart.AirportInformationRunwayValidation" xml:space="preserve"><value>Position and true heading are automatically checked against the same runway. No ATC clearance or certified takeoff performance check.</value></data>
-  <data name="Autostart.AirportInformationAirportFormat" xml:space="preserve"><value>Nearest airport: {0} – {1}
-Position: {2:F6}°, {3:F6}°; elevation: {4:F1} m; distance from position at the time of the request: {5:F2} km</value></data>
-  <data name="Autostart.AirportInformationRunwayFormat" xml:space="preserve"><value>{0}/{1}: Position: {2:F6}°, {3:F6}°; elevation: {4:F1} m
-Length × width: {5:F1} × {6:F1} m; true headings: {7:F1}° / {8:F1}°</value></data>
-  <data name="Waypoint.WaypointHeightTransferFailed" xml:space="preserve"><value>Could not apply the height above ground.</value></data>
-  <data name="Waypoint.WaypointLoadTitle" xml:space="preserve"><value>Load waypoint file</value></data>
-  <data name="Waypoint.RelocationAlreadyThere" xml:space="preserve"><value>The aircraft is already at the destination. Please select another point on the map.</value></data>
-  <data name="Waypoint.WaypointSaveError" xml:space="preserve"><value>Could not save the waypoint file. Please check file access.</value></data>
-  <data name="Waypoint.WaypointRemoveFailed" xml:space="preserve"><value>Could not delete the waypoint.</value></data>
-  <data name="Waypoint.WaypointHeightAboveGroundLabel" xml:space="preserve"><value>Height above ground (AGL) in ft</value></data>
-  <data name="Waypoint.WaypointHeightSave" xml:space="preserve"><value>Save</value></data>
-  <data name="Waypoint.WaypointHeightCancel" xml:space="preserve"><value>Cancel</value></data>
-  <data name="Waypoint.RelocationExecute" xml:space="preserve"><value>Execute</value></data>
-  <data name="Waypoint.WaypointSaveFilter" xml:space="preserve"><value>Waypoint files (*.json)|*.json|All files (*.*)|*.*</value></data>
-  <data name="Waypoint.RelocationHelp" xml:space="preserve"><value>Target altitude: Terrain elevation at the destination plus current height above ground. Attitude, true heading and airspeed are retained.</value></data>
-  <data name="Waypoint.RelocationSafetyOff" xml:space="preserve"><value>The local autopilot was switched off as a precaution.</value></data>
-  <data name="Waypoint.RelocationDisconnected" xml:space="preserve"><value>No connection to the simulator.</value></data>
-  <data name="Waypoint.WaypointLoadFilter" xml:space="preserve"><value>Waypoint files (*.json)|*.json|All files (*.*)|*.*</value></data>
-  <data name="Waypoint.RelocationSuccess" xml:space="preserve"><value>Aircraft relocated. Target position and altitude confirmed by the simulator.</value></data>
-  <data name="Waypoint.WaypointHeightMissingTelemetry" xml:space="preserve"><value>No valid aircraft height above ground is available yet.</value></data>
-  <data name="Waypoint.RelocationFailed" xml:space="preserve"><value>Relocation could not be confirmed.</value></data>
-  <data name="Waypoint.WaypointHeightInvalid" xml:space="preserve"><value>Please enter a positive height above ground in feet.</value></data>
-  <data name="Waypoint.WaypointAltitudeHelp" xml:space="preserve"><value>Click a waypoint to set the desired height above ground.</value></data>
-  <data name="Waypoint.WaypointAltitudeMissing" xml:space="preserve"><value>Altitude unavailable</value></data>
-  <data name="Waypoint.RelocationAirborneOnly" xml:space="preserve"><value>Relocation with unchanged height above ground is only possible in flight.</value></data>
-  <data name="Waypoint.WaypointHeightHelp" xml:space="preserve"><value>Enter the desired height above the terrain at the waypoint in feet.</value></data>
-  <data name="Waypoint.WaypointSaveTitle" xml:space="preserve"><value>Save waypoint file</value></data>
-  <data name="Waypoint.WaypointLoadError" xml:space="preserve"><value>Could not load the waypoint file. Please check file access and JSON format. The existing route is retained.</value></data>
-  <data name="Waypoint.RelocationInvalidTelemetry" xml:space="preserve"><value>The simulator did not provide a valid flight state.</value></data>
-  <data name="Waypoint.RelocationTimeout" xml:space="preserve"><value>Timed out while retrieving terrain elevation or simulator confirmation.</value></data>
-  <data name="Waypoint.RelocationBusy" xml:space="preserve"><value>Relocation in progress – requesting terrain elevation and simulator confirmation …</value></data>
-  <data name="Waypoint.WaypointAltitudeSuffix" xml:space="preserve"><value>ft</value></data>
-  <data name="Waypoint.WaypointRemove" xml:space="preserve"><value>Delete</value></data>
-  <data name="Waypoint.RelocationTitle" xml:space="preserve"><value>Relocate aircraft</value></data>
-  <data name="Waypoint.RelocationSkipToHere" xml:space="preserve"><value>Move aircraft position</value></data>
-  <data name="Waypoint.WaypointDialogTitle" xml:space="preserve"><value>Waypoints</value></data>
-  <data name="Waypoint.WaypointLabel" xml:space="preserve"><value>Waypoint</value></data>
-  <data name="MainForm_TopToolbar" xml:space="preserve"><value>Navigation</value></data>
-  <data name="MainForm_AircraftPosition" xml:space="preserve"><value>Aircraft position:</value></data>
-  <data name="MainForm_CenterMap" xml:space="preserve"><value>Center map</value></data>
-  <data name="MainForm_FlightPlan" xml:space="preserve"><value>Flight plan (waypoints):</value></data>
-  <data name="MainForm_Follow" xml:space="preserve"><value>follow</value></data>
-  <data name="MainForm_FollowToolTip" xml:space="preserve"><value>Starts waypoint tracking and switches AP+ALT+LVL+HDG on.</value></data>
-  <data name="MainForm_Clear" xml:space="preserve"><value>clear</value></data>
-  <data name="MainForm_ClearToolTip" xml:space="preserve"><value>Deletes all waypoints and stops tracking.</value></data>
-  <data name="MainForm_Reset" xml:space="preserve"><value>reset</value></data>
-  <data name="MainForm_ResetToolTip" xml:space="preserve"><value>Resets route progress to the first waypoint without starting tracking if it is switched off.</value></data>
-  <data name="MainForm_Save" xml:space="preserve"><value>save</value></data>
-  <data name="MainForm_SaveToolTip" xml:space="preserve"><value>Opens a save dialog and exports the route.</value></data>
-  <data name="MainForm_Load" xml:space="preserve"><value>load</value></data>
-  <data name="MainForm_LoadToolTip" xml:space="preserve"><value>Opens a load dialog and imports the route.</value></data>
-  <data name="MainForm_German" xml:space="preserve"><value>Deutsch</value></data>
-  <data name="MainForm_English" xml:space="preserve"><value>English</value></data>
-  <data name="MainForm_Information" xml:space="preserve"><value>i</value></data>
-  <data name="MainForm_InformationToolTip" xml:space="preserve"><value>Info</value></data>
-  <data name="MainForm_BottomToolbar" xml:space="preserve"><value>Flight controls</value></data>
-  <data name="MainForm_Autopilot" xml:space="preserve"><value>AP</value></data>
-  <data name="MainForm_AutopilotToolTip" xml:space="preserve"><value>Autopilot ON/OFF</value></data>
-  <data name="MainForm_TargetAltitude" xml:space="preserve"><value>Target altitude:</value></data>
-  <data name="MainForm_InitialAltitude" xml:space="preserve"><value>3000</value></data>
-  <data name="MainForm_AltitudeToolTip" xml:space="preserve"><value>Altitude in ft</value></data>
-  <data name="MainForm_UseCurrentValue" xml:space="preserve"><value>←</value></data>
-  <data name="MainForm_CurrentAltitudeToolTip" xml:space="preserve"><value>Use current altitude as target</value></data>
-  <data name="MainForm_AltitudeControl" xml:space="preserve"><value>ALT</value></data>
-  <data name="MainForm_AltitudeControlToolTip" xml:space="preserve"><value>Flies to the entered target altitude and holds it.</value></data>
-  <data name="MainForm_AttitudeControl" xml:space="preserve"><value>ATT</value></data>
-  <data name="MainForm_AttitudeControlToolTip" xml:space="preserve"><value>Controls vertical speed to 0 ft/min. No specific altitude is held as a target.</value></data>
-  <data name="MainForm_TargetHeading" xml:space="preserve"><value>Target heading:</value></data>
-  <data name="MainForm_InitialHeading" xml:space="preserve"><value>0</value></data>
-  <data name="MainForm_HeadingToolTip" xml:space="preserve"><value>Heading in degrees</value></data>
-  <data name="MainForm_CurrentHeadingToolTip" xml:space="preserve"><value>Use current heading as target</value></data>
-  <data name="MainForm_HeadingControl" xml:space="preserve"><value>HDG</value></data>
-  <data name="MainForm_HeadingControlToolTip" xml:space="preserve"><value>HDG determines the required target bank from the heading error; LVL controls this bank and guides the aircraft to the target heading.</value></data>
-  <data name="MainForm_LevelControl" xml:space="preserve"><value>LVL</value></data>
-  <data name="MainForm_LevelControlToolTip" xml:space="preserve"><value>Keeps the wings level: Target bank 0°. Heading deviations are not specifically corrected.</value></data>
-  <data name="MainForm_AutoThrottleDescription" xml:space="preserve"><value>Enables or disables automatic thrust control independently of ATT and LVL.</value></data>
-  <data name="MainForm_AutoThrottleName" xml:space="preserve"><value>Automatic thrust control</value></data>
-  <data name="MainForm_AutoThrottle" xml:space="preserve"><value>A/THR</value></data>
-  <data name="MainForm_AutoThrottleToolTip" xml:space="preserve"><value>Automatic thrust control ON/OFF</value></data>
-  <data name="MainForm_AutoElevation" xml:space="preserve"><value>Auto-Altitude</value></data>
-  <data name="MainForm_AutoElevationToolTip" xml:space="preserve"><value>Automatically maintains flight altitude as ground elevation changes.</value></data>
-  <data name="MainForm_Takeoff" xml:space="preserve"><value>Auto-Takeoff</value></data>
-  <data name="MainForm_TakeoffToolTip" xml:space="preserve"><value>Automatic takeoff from the runway</value></data>
-  <data name="MainForm_AutoLand" xml:space="preserve"><value>Auto-Landing </value></data>
-  <data name="MainForm_AutoLandToolTip" xml:space="preserve"><value>Automatic landing at the nearest airport</value></data>
-  <data name="MainForm_Ready" xml:space="preserve"><value>Ready</value></data>
-  <data name="MainForm_Starting" xml:space="preserve"><value>AutoFly is starting …</value></data>
-  <data name="MainForm_Connecting" xml:space="preserve"><value>Connecting to MSFS …</value></data>
-  <data name="MainForm_WaitingForConnection" xml:space="preserve"><value>MSFS connection: Waiting for connection …</value></data>
-  <data name="MainForm_SimulatorNotRunning" xml:space="preserve"><value>MSFS is not running. Please start MSFS first, then open the panel.</value></data>
-  <data name="MainForm_SimulatorNotFoundTitle" xml:space="preserve"><value>MSFS not found</value></data>
-  <data name="MainForm_WebViewError" xml:space="preserve"><value>Resource WebView error: {0}</value></data>
-  <data name="MainForm_Connected" xml:space="preserve"><value>Connected to MSFS 2024</value></data>
-  <data name="MainForm_UnknownRequest" xml:space="preserve"><value>Unknown RequestID: {0}</value></data>
-  <data name="MainForm_DataReceiveError" xml:space="preserve"><value>Error receiving simulator data (OnRecvSimobjectData): {0} </value></data>
-  <data name="MainForm_UnknownErrorCode" xml:space="preserve"><value>Unknown({0})</value></data>
-  <data name="MainForm_DataItemDetails" xml:space="preserve"><value>{0} (RequestId={1}, DefinitionId={2})</value></data>
-  <data name="MainForm_DataItemNotFound" xml:space="preserve"><value>No DataItem found for index {0}</value></data>
-  <data name="MainForm_SimConnectError" xml:space="preserve"><value>SimConnect error: Code={0} ({1}), SendID={2}, Index={3}, Variable={4}</value></data>
-  <data name="MainForm_ExceptionHandlerError" xml:space="preserve"><value>Error in exception handler: {0}</value></data>
-  <data name="MainForm_Closing" xml:space="preserve"><value>AutoFly is closing …</value></data>
-  <data name="MainForm_Disconnecting" xml:space="preserve"><value>AutoFly is disconnecting …</value></data>
-  <data name="MainForm_Title" xml:space="preserve"><value>AutoFly</value></data>
-  <data name="Elevation_InvalidGroundHeight" xml:space="preserve"><value>{0} did not return a valid ground elevation.</value></data>
-  <data name="Elevation_HeightConversionFailed" xml:space="preserve"><value>The ground elevation cannot be converted to feet.</value></data>
-  <data name="Relocation_SimConnectError" xml:space="preserve"><value>SimConnect: {0} (SendID={1}, Index={2}).</value></data>
-  <data name="Autostart_CheckReasonFormat" xml:space="preserve"><value>{0}: {1}</value></data>
-  <data name="Waypoint_InvalidGroundDistance" xml:space="preserve"><value>The height above ground must be finite and greater than zero.</value></data>
-  <data name="Waypoint_ConfirmClear" xml:space="preserve"><value>Are you sure you want to delete all waypoints?</value></data>
-  <data name="Waypoint_DefaultFileName" xml:space="preserve"><value>flightplan.json</value></data>
-  <data name="Waypoint_InvalidMessageCoordinates" xml:space="preserve"><value>The web message does not contain valid coordinates (lat/lng).</value></data>
-  <data name="Map.Title" xml:space="preserve"><value>AutoFly Map</value></data>
-  <data name="Map.Horizon" xml:space="preserve"><value>Artificial horizon</value></data>
-  <data name="Map.OuterRose" xml:space="preserve"><value>Outer compass rose</value></data>
-  <data name="Map.InnerRose" xml:space="preserve"><value>Inner compass rose</value></data>
-  <data name="Map.AutopilotCourse" xml:space="preserve"><value>Autopilot heading</value></data>
-  <data name="Map.Plane" xml:space="preserve"><value>Aircraft</value></data>
-  <data name="Map.ZoomIn" xml:space="preserve"><value>Zoom in</value></data>
-  <data name="Map.ZoomOut" xml:space="preserve"><value>Zoom out</value></data>
-  <data name="Map.ClosePopup" xml:space="preserve"><value>Close</value></data>
-  <data name="Map.OpenStreetMap" xml:space="preserve"><value>OpenStreetMap</value></data>
-  <data name="Map.Hillshade" xml:space="preserve"><value>Esri World Hillshade</value></data>
-  <data name="Map.NauticalMiles" xml:space="preserve"><value>nm</value></data>
-  <data name="Map.Feet" xml:space="preserve"><value>ft</value></data>
-  <data name="Map.Knots" xml:space="preserve"><value>kts</value></data>
-  <data name="Map.AltitudeMissing" xml:space="preserve"><value>-- ft</value></data>
-  <data name="Map.SpeedMissing" xml:space="preserve"><value>-- kts</value></data>
-  <data name="Waypoint.WaypointDistanceSuffix" xml:space="preserve"><value>NM</value></data>
-  <data name="Waypoint.WaypointGroundSource" xml:space="preserve"><value>Ground elevation: Open-Elevation (https://open-elevation.com/)</value></data>
-  <data name="AutoLand.MapPoint.PA" xml:space="preserve"><value>PA</value></data>
-  <data name="AutoLand.MapPoint.P1" xml:space="preserve"><value>P1</value></data>
-  <data name="AutoLand.MapPoint.P2" xml:space="preserve"><value>P2</value></data>
-  <data name="AutoLand.MapPoint.P3" xml:space="preserve"><value>P3</value></data>
-  <data name="AutoLand.MapPoint.P4" xml:space="preserve"><value>P4</value></data>
-  <data name="AutoLand.MapPoint.P5" xml:space="preserve"><value>P5</value></data>
-  <data name="InfoDialog_Title" xml:space="preserve"><value>About AutoFly</value></data>
-  <data name="InfoDialog_Close" xml:space="preserve"><value>&amp;Close</value></data>
-  <data name="InfoDialog_CloseDescription" xml:space="preserve"><value>Closes the information dialog and returns to AutoFly.</value></data>
-  <data name="InfoDialog_ContentDescription" xml:space="preserve"><value>Information about AutoFly, the version and acknowledgements.</value></data>
-  <data name="InfoDialog_LinkError" xml:space="preserve"><value>Could not open the website: {0}</value></data>
-  <data name="InfoDialog_Text" xml:space="preserve"><value>AutoFly
+  <data name="autoStartDialog.AccessibleDescription" xml:space="preserve">
+    <value>Readiness check or takeoff roll failed. During the takeoff roll, idle thrust and full braking remain active until a complete stop is confirmed. OK requests an abort followed by the release of controls. No certified takeoff or braking performance data.</value>
+  </data>
+  <data name="AutoLand.Land" xml:space="preserve">
+    <value>Auto-Landing</value>
+  </data>
+  <data name="AutoLand.Abort" xml:space="preserve">
+    <value>Abort landing</value>
+  </data>
+  <data name="AutoLand.Description" xml:space="preserve">
+    <value>Automatic landing at a nearby airport.</value>
+  </data>
+  <data name="AutoLand.Loading" xml:space="preserve">
+    <value>AutoLand: Searching for airports near the current aircraft position</value>
+  </data>
+  <data name="AutoLand.SearchingNearby" xml:space="preserve">
+    <value>[AutoLand] Searching for airports within {0:N0} NM</value>
+  </data>
+  <data name="AutoLand.NoNearbyAirports" xml:space="preserve">
+    <value>AutoLand: No nearby airports found even after three searches (25, 50 and 100 NM). Planning can be cancelled.</value>
+  </data>
+  <data name="AutoLand.PositionUnavailable" xml:space="preserve">
+    <value>No valid current aircraft position available for the nearby airport search</value>
+  </data>
+  <data name="AutoLand.Unavailable" xml:space="preserve">
+    <value>AutoLand: Data is missing or could not be loaded. Planning remains active; landing can still be aborted.</value>
+  </data>
+  <data name="AutoLand.Failure" xml:space="preserve">
+    <value>AutoLand: {0}. Planning remains active; landing can still be aborted.</value>
+  </data>
+  <data name="AutoLand.Choose" xml:space="preserve">
+    <value>Nearby airports, please select:</value>
+  </data>
+  <data name="AutoLand.AirportListDescription" xml:space="preserve">
+    <value>Airports with fully loaded usable runways, nearest first. Water runways are only available for aircraft with floats. Airports without runways are also shown for helicopters. The list shows the identifier, full name, distance in nautical miles from the aircraft position at the time of the search, and the length of the longest usable runway in meters. Runway length is left blank for airports without a runway.</value>
+  </data>
+  <data name="AutoLand.Icao" xml:space="preserve">
+    <value>Identifier</value>
+  </data>
+  <data name="AutoLand.Name" xml:space="preserve">
+    <value>Airport name</value>
+  </data>
+  <data name="AutoLand.Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="AutoLand.Distance" xml:space="preserve">
+    <value>Distance (NM)</value>
+  </data>
+  <data name="AutoLand.LongestRunwayLength" xml:space="preserve">
+    <value>Longest runway (m)</value>
+  </data>
+  <data name="AutoLand.Queued" xml:space="preserve">
+    <value>Queued for loading</value>
+  </data>
+  <data name="AutoLand.Waiting" xml:space="preserve">
+    <value>Loading …</value>
+  </data>
+  <data name="AutoLand.Timeout" xml:space="preserve">
+    <value>No simulator response within 15 seconds</value>
+  </data>
+  <data name="AutoLand.MissingName" xml:space="preserve">
+    <value>Name unavailable</value>
+  </data>
+  <data name="AutoLand.Ready" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="AutoLand.Missing" xml:space="preserve">
+    <value>Data missing – abort available</value>
+  </data>
+  <data name="AutoLand.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AutoLand.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AutoLand.SelectionRequired" xml:space="preserve">
+    <value>Please select an airport with complete name and runway data. If the aircraft position or model speeds are missing, you can check again with OK once the data has arrived.</value>
+  </data>
+  <data name="AutoLand.RunwayRequiredForPlan" xml:space="preserve">
+    <value>This airport is listed for helicopters without a runway. However, the current approach marking requires an actual runway; helicopter approach planning has not yet been implemented.</value>
+  </data>
+  <data name="AutoLand.Marked" xml:space="preserve">
+    <value>[AutoLand] {0}, runway {1} marked</value>
+  </data>
+  <data name="AutoLand.Cancelled" xml:space="preserve">
+    <value>[AutoLand] Map markers removed and mode switches released.</value>
+  </data>
+  <data name="AutoLand.CancelMapFailure" xml:space="preserve">
+    <value>AutoLand ended and mode switches released. Removal of its markers could not be confirmed due to a map error.</value>
+  </data>
+  <data name="AutoLand.MapUnavailable" xml:space="preserve">
+    <value>The map is not yet available. No flight control</value>
+  </data>
+  <data name="Autostart.BlockedTitle" xml:space="preserve">
+    <value>Automatic takeoff blocked:</value>
+  </data>
+  <data name="Autostart.BlockedDescription" xml:space="preserve">
+    <value>Readiness check or takeoff roll failed. During the takeoff roll, idle thrust and full braking remain active until a complete stop is confirmed. OK requests an abort followed by the release of controls. No certified takeoff or braking performance data.</value>
+  </data>
+  <data name="Autostart.BlockedInformationTitle" xml:space="preserve">
+    <value>Failure reasons and airport data</value>
+  </data>
+  <data name="Autostart.Acknowledge" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Autostart.AcknowledgeDescription" xml:space="preserve">
+    <value>Requests an abort. After a takeoff roll, brakes and steering are only released once a complete stop is confirmed.</value>
+  </data>
+  <data name="Autostart.Check_OnGround" xml:space="preserve">
+    <value>Aircraft on the ground</value>
+  </data>
+  <data name="Autostart.Check_CurrentTelemetry" xml:space="preserve">
+    <value>Current telemetry</value>
+  </data>
+  <data name="Autostart.Check_EnginesRunning" xml:space="preserve">
+    <value>Engines running</value>
+  </data>
+  <data name="Autostart.Check_TakeoffProfile" xml:space="preserve">
+    <value>Provisional takeoff profile</value>
+  </data>
+  <data name="Autostart.Check_RunwayPosition" xml:space="preserve">
+    <value>Position on runway</value>
+  </data>
+  <data name="Autostart.Check_RunwayHeading" xml:space="preserve">
+    <value>Heading on runway</value>
+  </data>
+  <data name="Autostart.Passed" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Autostart.Failed" xml:space="preserve">
+    <value>NOK</value>
+  </data>
+  <data name="Autostart.Pending" xml:space="preserve">
+    <value>Not yet evaluated.</value>
+  </data>
+  <data name="Autostart.Unavailable" xml:space="preserve">
+    <value>unavailable</value>
+  </data>
+  <data name="Autostart.StartRoll" xml:space="preserve">
+    <value>Phase 2: Build takeoff thrust, monitor the runway centerline and remaining runway.</value>
+  </data>
+  <data name="Autostart.RunwayReserveConfiguration" xml:space="preserve">
+    <value>Provisional remaining-runway abort threshold: {0:F1} m. Not a calculated or guaranteed stopping distance.</value>
+  </data>
+  <data name="Autostart.VrBraking" xml:space="preserve">
+    <value>Takeoff roll aborted: Idle thrust and both wheel brakes fully applied until a complete stop is confirmed.</value>
+  </data>
+  <data name="Autostart.RollStopped" xml:space="preserve">
+    <value>Takeoff roll aborted and complete stop confirmed. Idle thrust and full braking remain active until controls are released.</value>
+  </data>
+  <data name="Autostart.AbortStopped" xml:space="preserve">
+    <value>Aborted takeoff roll: Groundspeed confirms a complete stop. Idle thrust and full braking remain active until acknowledgement.</value>
+  </data>
+  <data name="Autostart.CancelledBraking" xml:space="preserve">
+    <value>Takeoff aborted: Idle thrust and both wheel brakes fully applied. Controls are only released after a complete stop is confirmed.</value>
+  </data>
+  <data name="Autostart.RunwayReserve" xml:space="preserve">
+    <value>Takeoff aborted: Provisional remaining-runway reserve reached. Idle thrust and full braking; this reserve does not guarantee a safe stopping distance.</value>
+  </data>
+  <data name="Autostart.RollTimeout" xml:space="preserve">
+    <value>Takeoff aborted: Ground phase exceeded 120 seconds. Idle thrust and full braking.</value>
+  </data>
+  <data name="Autostart.RollTelemetryOrTracking" xml:space="preserve">
+    <value>Takeoff aborted: Telemetry/model invalid or stale, aircraft has left the runway, lateral distance from the centerline exceeds 40 % of the runway width, or heading deviation exceeds 20°. Idle thrust and full braking.</value>
+  </data>
+  <data name="Autostart.RollInterlock" xml:space="preserve">
+    <value>Takeoff aborted: An integration prerequisite is no longer met. Idle thrust and full braking, provided the simulator connection is available.</value>
+  </data>
+  <data name="Autostart.AircraftChanged" xml:space="preserve">
+    <value>Takeoff aborted: Aircraft/session identity has changed. No automatic restart; idle thrust and full braking.</value>
+  </data>
+  <data name="Autostart.EngineFailure" xml:space="preserve">
+    <value>Takeoff aborted on the ground: Engine operation is no longer confirmed by current data. Idle thrust, full braking and neutral control axes are requested.</value>
+  </data>
+  <data name="Autostart.DetailFormat" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Autostart.Detail_MissingValue" xml:space="preserve">
+    <value>Value not yet received.</value>
+  </data>
+  <data name="Autostart.Detail_InvalidTimestamp" xml:space="preserve">
+    <value>Measurement timestamp is missing or is not a UTC timestamp.</value>
+  </data>
+  <data name="Autostart.Detail_FutureTimestamp" xml:space="preserve">
+    <value>Measurement timestamp is in the future.</value>
+  </data>
+  <data name="Autostart.Detail_StaleTelemetry" xml:space="preserve">
+    <value>Telemetry is more than two seconds old.</value>
+  </data>
+  <data name="Autostart.Detail_InvalidValue" xml:space="preserve">
+    <value>Value is invalid or outside the permitted range.</value>
+  </data>
+  <data name="Autostart.Detail_AircraftNotOnGround" xml:space="preserve">
+    <value>Aircraft is not on the ground.</value>
+  </data>
+  <data name="Autostart.Detail_EngineNotRunning" xml:space="preserve">
+    <value>Engine is not running.</value>
+  </data>
+  <data name="Autostart.Detail_InconsistentProfile" xml:space="preserve">
+    <value>Model profile speeds are inconsistent.</value>
+  </data>
+  <data name="Autostart.Detail_RunwayDataPending" xml:space="preserve">
+    <value>The runway query has not yet completed.</value>
+  </data>
+  <data name="Autostart.Detail_RunwayDataUnavailable" xml:space="preserve">
+    <value>No complete runway data available.</value>
+  </data>
+  <data name="Autostart.Detail_InvalidRunwayData" xml:space="preserve">
+    <value>Runway data is invalid or incomplete.</value>
+  </data>
+  <data name="Autostart.Detail_RunwayModelMismatch" xml:space="preserve">
+    <value>Runway data does not belong to the current model or takeoff attempt.</value>
+  </data>
+  <data name="Autostart.Detail_AircraftOutsideRunway" xml:space="preserve">
+    <value>The aircraft is outside the available runway areas.</value>
+  </data>
+  <data name="Autostart.Detail_RunwayHeadingMismatch" xml:space="preserve">
+    <value>The aircraft's true heading exceeds the permitted runway heading deviation (readiness check 3°, takeoff roll 20°).</value>
+  </data>
+  <data name="Autostart.Detail_RunwayHeadingRequiresPosition" xml:space="preserve">
+    <value>Heading cannot be checked because the aircraft is not on any available runway area.</value>
+  </data>
+  <data name="Autostart.Detail_PhaseNotReady" xml:space="preserve">
+    <value>The current phase does not permit readiness approval.</value>
+  </data>
+  <data name="Autostart.TakeoffName" xml:space="preserve">
+    <value>Auto-Takeoff</value>
+  </data>
+  <data name="Autostart.TakeoffDescription" xml:space="preserve">
+    <value>After six takeoff approvals: Thrust ramp, centerline guidance, rotation at model VR and stabilized initial climb. Handover to the local AP/ALT/HDG/LVL/thrust controllers once climb above 50 ft AGL and at least model VY are confirmed. Provisional remaining-runway reserve defaults to 200 m; no stopping guarantee. Terrain following and waypoint tracking remain off.</value>
+  </data>
+  <data name="Autostart.AbortStart" xml:space="preserve">
+    <value>Abort takeoff</value>
+  </data>
+  <data name="Autostart.AbortStartDescription" xml:space="preserve">
+    <value>Aborts the readiness check. On the ground: Idle thrust and full braking until a complete stop is confirmed. In flight or if ground status is uncertain after rotation: Direct control axes neutral, thrust unchanged, take over manually immediately. Previously active modes remain off.</value>
+  </data>
+  <data name="Autostart.Disconnected" xml:space="preserve">
+    <value>Autostart blocked: Simulator connection or local controller unavailable.</value>
+  </data>
+  <data name="Autostart.DataUnavailable" xml:space="preserve">
+    <value>Autostart blocked: The coherent model profile and telemetry dataset is unavailable. Abort and check the connection.</value>
+  </data>
+  <data name="Autostart.ControlFailure" xml:space="preserve">
+    <value>Autostart control command failed. On the ground, idle thrust and full braking are requested. In flight: Take over manually immediately, no automatic thrust reduction or full braking. Actuator response is not guaranteed.</value>
+  </data>
+  <data name="Autostart.AutopilotUnknown" xml:space="preserve">
+    <value>Autostart blocked: Current confirmation of “Simulator autopilot OFF” is missing.</value>
+  </data>
+  <data name="Autostart.AutopilotStillOn" xml:space="preserve">
+    <value>Autostart blocked: Simulator autopilot is on. Current OFF confirmation is required.</value>
+  </data>
+  <data name="Autostart.MapUnavailable" xml:space="preserve">
+    <value>Autostart blocked: The existing WebView map is not yet available.</value>
+  </data>
+  <data name="Autostart.RelocationBlocked" xml:space="preserve">
+    <value>Autostart and relocation are mutually exclusive. End or abort the active operation first.</value>
+  </data>
+  <data name="Autostart.InterlockReady" xml:space="preserve">
+    <value>Interlocks cleared</value>
+  </data>
+  <data name="Autostart.ReadinessTimeout" xml:space="preserve">
+    <value>Autostart blocked: The readiness check was not completed within 45 seconds.</value>
+  </data>
+  <data name="Autostart.ReadinessFailed" xml:space="preserve">
+    <value>Autostart blocked: Not all prerequisites are met.</value>
+  </data>
+  <data name="Autostart.Aborted" xml:space="preserve">
+    <value>Autostart aborted. Controls restored; all competing modes remain off.</value>
+  </data>
+  <data name="Autostart.StartGateBlocked" xml:space="preserve">
+    <value>Auto-Takeoff blocked: No current confirmation that the aircraft is on the ground, or takeoff conditions are not met. Existing flight controllers remain unchanged.</value>
+  </data>
+  <data name="Autostart.FlightRotation" xml:space="preserve">
+    <value>Phase 3: Model VR reached. Raise the nose in a controlled manner, correct bank and confirm liftoff.</value>
+  </data>
+  <data name="Autostart.FlightInitialClimb" xml:space="preserve">
+    <value>Phase 4: Initial climb. Stabilize model VY, climb rate and attitude for handover.</value>
+  </data>
+  <data name="Autostart.FlightHandoverPreparing" xml:space="preserve">
+    <value>Phase 5: Prepare handover. Neutral control axes, released wheel brakes and 90 % thrust requested; readback values are being checked.</value>
+  </data>
+  <data name="Autostart.FlightHandoverComplete" xml:space="preserve">
+    <value>Autostart completed. Local AP, ALT, HDG, LVL and thrust controllers take over. Target altitude: Current altitude +500 ft; target heading: Magnetic runway heading.</value>
+  </data>
+  <data name="Autostart.FlightHandoverFailed" xml:space="preserve">
+    <value>Handover to the local flight controllers failed. Take over manually immediately! Direct control axes are being neutralized; no automatic thrust reduction or full braking.</value>
+  </data>
+  <data name="Autostart.FlightManualTakeover" xml:space="preserve">
+    <value>Automatic takeoff ended. Take over manually immediately! Direct control axes are being neutralized; thrust remains unchanged and wheel brakes are released.</value>
+  </data>
+  <data name="Autostart.FlightTelemetryInvalid" xml:space="preserve">
+    <value>Flight, engine or model data invalid or stale. On the ground: Takeoff abort with idle thrust and full braking. In flight: Take over manually immediately, no automatic thrust reduction or full braking.</value>
+  </data>
+  <data name="Autostart.FlightGroundContact" xml:space="preserve">
+    <value>Ground contact detected after a liftoff signal. Automatic takeoff ended; take over manually immediately! No automatic thrust reduction or full braking.</value>
+  </data>
+  <data name="Autostart.FlightTimeout" xml:space="preserve">
+    <value>Time limit for rotation (30 s) or initial climb (120 s) exceeded. On the ground: Takeoff abort with idle thrust and full braking. In flight: Take over manually immediately!</value>
+  </data>
+  <data name="Autostart.AirportInformationTitle" xml:space="preserve">
+    <value>Airport and runway data</value>
+  </data>
+  <data name="Autostart.AirportInformationWaitingPosition" xml:space="preserve">
+    <value>Waiting for a new valid position …</value>
+  </data>
+  <data name="Autostart.AirportInformationLoadingAirports" xml:space="preserve">
+    <value>Retrieving airports …</value>
+  </data>
+  <data name="Autostart.AirportInformationLoadingRunways" xml:space="preserve">
+    <value>Retrieving airport and runway data for {0} …</value>
+  </data>
+  <data name="Autostart.AirportInformationDisconnected" xml:space="preserve">
+    <value>No simulator connection for retrieving airports.</value>
+  </data>
+  <data name="Autostart.AirportInformationTimeout" xml:space="preserve">
+    <value>Airport information request timed out. OK aborts this takeoff attempt.</value>
+  </data>
+  <data name="Autostart.AirportInformationRequestFailed" xml:space="preserve">
+    <value>Could not retrieve airport information.</value>
+  </data>
+  <data name="Autostart.AirportInformationDefinitionFailed" xml:space="preserve">
+    <value>The facility definition failed. A new simulator connection is required before trying again.</value>
+  </data>
+  <data name="Autostart.AirportInformationIncomplete" xml:space="preserve">
+    <value>The received airport or runway data is incomplete or invalid.</value>
+  </data>
+  <data name="Autostart.AirportInformationNoAirports" xml:space="preserve">
+    <value>No airports received.</value>
+  </data>
+  <data name="Autostart.AirportInformationRunwaysHeading" xml:space="preserve">
+    <value>All physical runways (positions are at the runway centers):</value>
+  </data>
+  <data name="Autostart.AirportInformationNoRunways" xml:space="preserve">
+    <value>No physical runways were reported for this airport.</value>
+  </data>
+  <data name="Autostart.AirportInformationRunwayValidation" xml:space="preserve">
+    <value>Position and true heading are automatically checked against the same runway. No ATC clearance or certified takeoff performance check.</value>
+  </data>
+  <data name="Autostart.AirportInformationAirportFormat" xml:space="preserve">
+    <value>Nearest airport: {0} – {1}
+Position: {2:F6}°, {3:F6}°; elevation: {4:F1} m; distance from position at the time of the request: {5:F2} km</value>
+  </data>
+  <data name="Autostart.AirportInformationRunwayFormat" xml:space="preserve">
+    <value>{0}/{1}: Position: {2:F6}°, {3:F6}°; elevation: {4:F1} m
+Length × width: {5:F1} × {6:F1} m; true headings: {7:F1}° / {8:F1}°</value>
+  </data>
+  <data name="Waypoint.WaypointHeightTransferFailed" xml:space="preserve">
+    <value>Could not apply the height above ground.</value>
+  </data>
+  <data name="Waypoint.WaypointLoadTitle" xml:space="preserve">
+    <value>Load waypoint file</value>
+  </data>
+  <data name="Waypoint.RelocationAlreadyThere" xml:space="preserve">
+    <value>The aircraft is already at the destination. Please select another point on the map.</value>
+  </data>
+  <data name="Waypoint.WaypointSaveError" xml:space="preserve">
+    <value>Could not save the waypoint file. Please check file access.</value>
+  </data>
+  <data name="Waypoint.WaypointRemoveFailed" xml:space="preserve">
+    <value>Could not delete the waypoint.</value>
+  </data>
+  <data name="Waypoint.WaypointHeightAboveGroundLabel" xml:space="preserve">
+    <value>Height above ground (AGL) in ft</value>
+  </data>
+  <data name="Waypoint.WaypointHeightSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Waypoint.WaypointHeightCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Waypoint.RelocationExecute" xml:space="preserve">
+    <value>Execute</value>
+  </data>
+  <data name="Waypoint.WaypointSaveFilter" xml:space="preserve">
+    <value>Waypoint files (*.json)|*.json|All files (*.*)|*.*</value>
+  </data>
+  <data name="Waypoint.RelocationHelp" xml:space="preserve">
+    <value>Target altitude: Terrain elevation at the destination plus current height above ground. Attitude, true heading and airspeed are retained.</value>
+  </data>
+  <data name="Waypoint.RelocationSafetyOff" xml:space="preserve">
+    <value>The local autopilot was switched off as a precaution.</value>
+  </data>
+  <data name="Waypoint.RelocationDisconnected" xml:space="preserve">
+    <value>No connection to the simulator.</value>
+  </data>
+  <data name="Waypoint.WaypointLoadFilter" xml:space="preserve">
+    <value>Waypoint files (*.json)|*.json|All files (*.*)|*.*</value>
+  </data>
+  <data name="Waypoint.RelocationSuccess" xml:space="preserve">
+    <value>Aircraft relocated. Target position and altitude confirmed by the simulator.</value>
+  </data>
+  <data name="Waypoint.WaypointHeightMissingTelemetry" xml:space="preserve">
+    <value>No valid aircraft height above ground is available yet.</value>
+  </data>
+  <data name="Waypoint.RelocationFailed" xml:space="preserve">
+    <value>Relocation could not be confirmed.</value>
+  </data>
+  <data name="Waypoint.WaypointHeightInvalid" xml:space="preserve">
+    <value>Please enter a positive height above ground in feet.</value>
+  </data>
+  <data name="Waypoint.WaypointAltitudeHelp" xml:space="preserve">
+    <value>Click a waypoint to set the desired height above ground.</value>
+  </data>
+  <data name="Waypoint.WaypointAltitudeMissing" xml:space="preserve">
+    <value>Altitude unavailable</value>
+  </data>
+  <data name="Waypoint.RelocationAirborneOnly" xml:space="preserve">
+    <value>Relocation with unchanged height above ground is only possible in flight.</value>
+  </data>
+  <data name="Waypoint.WaypointHeightHelp" xml:space="preserve">
+    <value>Enter the desired height above the terrain at the waypoint in feet.</value>
+  </data>
+  <data name="Waypoint.WaypointSaveTitle" xml:space="preserve">
+    <value>Save waypoint file</value>
+  </data>
+  <data name="Waypoint.WaypointLoadError" xml:space="preserve">
+    <value>Could not load the waypoint file. Please check file access and JSON format. The existing route is retained.</value>
+  </data>
+  <data name="Waypoint.RelocationInvalidTelemetry" xml:space="preserve">
+    <value>The simulator did not provide a valid flight state.</value>
+  </data>
+  <data name="Waypoint.RelocationTimeout" xml:space="preserve">
+    <value>Timed out while retrieving terrain elevation or simulator confirmation.</value>
+  </data>
+  <data name="Waypoint.RelocationBusy" xml:space="preserve">
+    <value>Relocation in progress – requesting terrain elevation and simulator confirmation …</value>
+  </data>
+  <data name="Waypoint.WaypointAltitudeSuffix" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Waypoint.WaypointRemove" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Waypoint.RelocationTitle" xml:space="preserve">
+    <value>Relocate aircraft</value>
+  </data>
+  <data name="Waypoint.RelocationSkipToHere" xml:space="preserve">
+    <value>Move aircraft position</value>
+  </data>
+  <data name="Waypoint.WaypointDialogTitle" xml:space="preserve">
+    <value>Waypoints</value>
+  </data>
+  <data name="Waypoint.WaypointLabel" xml:space="preserve">
+    <value>Waypoint</value>
+  </data>
+  <data name="MainForm_TopToolbar" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="MainForm_AircraftPosition" xml:space="preserve">
+    <value>Aircraft position:</value>
+  </data>
+  <data name="MainForm_CenterMap" xml:space="preserve">
+    <value>Center map</value>
+  </data>
+  <data name="MainForm_FlightPlan" xml:space="preserve">
+    <value>Flight plan (waypoints):</value>
+  </data>
+  <data name="MainForm_Follow" xml:space="preserve">
+    <value>follow</value>
+  </data>
+  <data name="MainForm_FollowToolTip" xml:space="preserve">
+    <value>Starts waypoint tracking and switches AP+ALT+LVL+HDG on.</value>
+  </data>
+  <data name="MainForm_Clear" xml:space="preserve">
+    <value>clear</value>
+  </data>
+  <data name="MainForm_ClearToolTip" xml:space="preserve">
+    <value>Deletes all waypoints and stops tracking.</value>
+  </data>
+  <data name="MainForm_Reset" xml:space="preserve">
+    <value>reset</value>
+  </data>
+  <data name="MainForm_ResetToolTip" xml:space="preserve">
+    <value>Resets route progress to the first waypoint without starting tracking if it is switched off.</value>
+  </data>
+  <data name="MainForm_Save" xml:space="preserve">
+    <value>save</value>
+  </data>
+  <data name="MainForm_SaveToolTip" xml:space="preserve">
+    <value>Opens a save dialog and exports the route.</value>
+  </data>
+  <data name="MainForm_Load" xml:space="preserve">
+    <value>load</value>
+  </data>
+  <data name="MainForm_LoadToolTip" xml:space="preserve">
+    <value>Opens a load dialog and imports the route.</value>
+  </data>
+  <data name="MainForm_German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="MainForm_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="MainForm_Information" xml:space="preserve">
+    <value>i</value>
+  </data>
+  <data name="MainForm_InformationToolTip" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="MainForm_BottomToolbar" xml:space="preserve">
+    <value>Flight controls</value>
+  </data>
+  <data name="MainForm_Autopilot" xml:space="preserve">
+    <value>AP</value>
+  </data>
+  <data name="MainForm_AutopilotToolTip" xml:space="preserve">
+    <value>Autopilot ON/OFF</value>
+  </data>
+  <data name="MainForm_TargetAltitude" xml:space="preserve">
+    <value>Target altitude:</value>
+  </data>
+  <data name="MainForm_InitialAltitude" xml:space="preserve">
+    <value>3000</value>
+  </data>
+  <data name="MainForm_AltitudeToolTip" xml:space="preserve">
+    <value>Altitude in ft</value>
+  </data>
+  <data name="MainForm_UseCurrentValue" xml:space="preserve">
+    <value>←</value>
+  </data>
+  <data name="MainForm_CurrentAltitudeToolTip" xml:space="preserve">
+    <value>Use current altitude as target</value>
+  </data>
+  <data name="MainForm_AltitudeControl" xml:space="preserve">
+    <value>ALT</value>
+  </data>
+  <data name="MainForm_AltitudeControlToolTip" xml:space="preserve">
+    <value>Flies to the entered target altitude and holds it.</value>
+  </data>
+  <data name="MainForm_AttitudeControl" xml:space="preserve">
+    <value>ATT</value>
+  </data>
+  <data name="MainForm_AttitudeControlToolTip" xml:space="preserve">
+    <value>Controls vertical speed to 0 ft/min. No specific altitude is held as a target.</value>
+  </data>
+  <data name="MainForm_TargetHeading" xml:space="preserve">
+    <value>Target heading:</value>
+  </data>
+  <data name="MainForm_InitialHeading" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MainForm_HeadingToolTip" xml:space="preserve">
+    <value>Heading in degrees</value>
+  </data>
+  <data name="MainForm_CurrentHeadingToolTip" xml:space="preserve">
+    <value>Use current heading as target</value>
+  </data>
+  <data name="MainForm_HeadingControl" xml:space="preserve">
+    <value>HDG</value>
+  </data>
+  <data name="MainForm_HeadingControlToolTip" xml:space="preserve">
+    <value>HDG determines the required target bank from the heading error; LVL controls this bank and guides the aircraft to the target heading.</value>
+  </data>
+  <data name="MainForm_LevelControl" xml:space="preserve">
+    <value>LVL</value>
+  </data>
+  <data name="MainForm_LevelControlToolTip" xml:space="preserve">
+    <value>Keeps the wings level: Target bank 0°. Heading deviations are not specifically corrected.</value>
+  </data>
+  <data name="MainForm_AutoThrottleDescription" xml:space="preserve">
+    <value>Enables or disables automatic thrust control independently of ATT and LVL.</value>
+  </data>
+  <data name="MainForm_AutoThrottleName" xml:space="preserve">
+    <value>Automatic thrust control</value>
+  </data>
+  <data name="MainForm_AutoThrottle" xml:space="preserve">
+    <value>A/THR</value>
+  </data>
+  <data name="MainForm_AutoThrottleToolTip" xml:space="preserve">
+    <value>Automatic thrust control ON/OFF</value>
+  </data>
+  <data name="MainForm_AutoElevation" xml:space="preserve">
+    <value>Auto-Altitude</value>
+  </data>
+  <data name="MainForm_AutoElevationToolTip" xml:space="preserve">
+    <value>Automatically maintains flight altitude as ground elevation changes.</value>
+  </data>
+  <data name="MainForm_Takeoff" xml:space="preserve">
+    <value>Auto-Takeoff</value>
+  </data>
+  <data name="MainForm_TakeoffToolTip" xml:space="preserve">
+    <value>Automatic takeoff from the runway</value>
+  </data>
+  <data name="MainForm_AutoLand" xml:space="preserve">
+    <value>Auto-Landing </value>
+  </data>
+  <data name="MainForm_AutoLandToolTip" xml:space="preserve">
+    <value>Automatic landing at the nearest airport</value>
+  </data>
+  <data name="MainForm_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="MainForm_Starting" xml:space="preserve">
+    <value>AutoFly is starting …</value>
+  </data>
+  <data name="MainForm_Connecting" xml:space="preserve">
+    <value>Connecting to MSFS …</value>
+  </data>
+  <data name="MainForm_WaitingForConnection" xml:space="preserve">
+    <value>MSFS connection: Waiting for connection …</value>
+  </data>
+  <data name="MainForm_SimulatorNotRunning" xml:space="preserve">
+    <value>MSFS is not running. Please start MSFS first, then open the panel.</value>
+  </data>
+  <data name="MainForm_SimulatorNotFoundTitle" xml:space="preserve">
+    <value>MSFS not found</value>
+  </data>
+  <data name="MainForm_WebViewError" xml:space="preserve">
+    <value>Resource WebView error: {0}</value>
+  </data>
+  <data name="MainForm_Connected" xml:space="preserve">
+    <value>Connected to MSFS 2024</value>
+  </data>
+  <data name="MainForm_UnknownRequest" xml:space="preserve">
+    <value>Unknown RequestID: {0}</value>
+  </data>
+  <data name="MainForm_DataReceiveError" xml:space="preserve">
+    <value>Error receiving simulator data (OnRecvSimobjectData): {0} </value>
+  </data>
+  <data name="MainForm_UnknownErrorCode" xml:space="preserve">
+    <value>Unknown({0})</value>
+  </data>
+  <data name="MainForm_DataItemDetails" xml:space="preserve">
+    <value>{0} (RequestId={1}, DefinitionId={2})</value>
+  </data>
+  <data name="MainForm_DataItemNotFound" xml:space="preserve">
+    <value>No DataItem found for index {0}</value>
+  </data>
+  <data name="MainForm_SimConnectError" xml:space="preserve">
+    <value>SimConnect error: Code={0} ({1}), SendID={2}, Index={3}, Variable={4}</value>
+  </data>
+  <data name="MainForm_ExceptionHandlerError" xml:space="preserve">
+    <value>Error in exception handler: {0}</value>
+  </data>
+  <data name="MainForm_Closing" xml:space="preserve">
+    <value>AutoFly is closing …</value>
+  </data>
+  <data name="MainForm_Disconnecting" xml:space="preserve">
+    <value>AutoFly is disconnecting …</value>
+  </data>
+  <data name="MainForm_Title" xml:space="preserve">
+    <value>AutoFly</value>
+  </data>
+  <data name="Elevation_InvalidGroundHeight" xml:space="preserve">
+    <value>{0} did not return a valid ground elevation.</value>
+  </data>
+  <data name="Elevation_HeightConversionFailed" xml:space="preserve">
+    <value>The ground elevation cannot be converted to feet.</value>
+  </data>
+  <data name="Relocation_SimConnectError" xml:space="preserve">
+    <value>SimConnect: {0} (SendID={1}, Index={2}).</value>
+  </data>
+  <data name="Autostart_CheckReasonFormat" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Waypoint_InvalidGroundDistance" xml:space="preserve">
+    <value>The height above ground must be finite and greater than zero.</value>
+  </data>
+  <data name="Waypoint_ConfirmClear" xml:space="preserve">
+    <value>Are you sure you want to delete all waypoints?</value>
+  </data>
+  <data name="Waypoint_DefaultFileName" xml:space="preserve">
+    <value>flightplan.json</value>
+  </data>
+  <data name="Waypoint_InvalidMessageCoordinates" xml:space="preserve">
+    <value>The web message does not contain valid coordinates (lat/lng).</value>
+  </data>
+  <data name="Map.Title" xml:space="preserve">
+    <value>AutoFly Map</value>
+  </data>
+  <data name="Map.Horizon" xml:space="preserve">
+    <value>Artificial horizon</value>
+  </data>
+  <data name="Map.OuterRose" xml:space="preserve">
+    <value>Outer compass rose</value>
+  </data>
+  <data name="Map.InnerRose" xml:space="preserve">
+    <value>Inner compass rose</value>
+  </data>
+  <data name="Map.AutopilotCourse" xml:space="preserve">
+    <value>Autopilot heading</value>
+  </data>
+  <data name="Map.Plane" xml:space="preserve">
+    <value>Aircraft</value>
+  </data>
+  <data name="Map.ZoomIn" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="Map.ZoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="Map.ClosePopup" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Map.OpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="Map.Hillshade" xml:space="preserve">
+    <value>Esri World Hillshade</value>
+  </data>
+  <data name="Map.NauticalMiles" xml:space="preserve">
+    <value>nm</value>
+  </data>
+  <data name="Map.Feet" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Map.Knots" xml:space="preserve">
+    <value>kts</value>
+  </data>
+  <data name="Map.AltitudeMissing" xml:space="preserve">
+    <value>-- ft</value>
+  </data>
+  <data name="Map.SpeedMissing" xml:space="preserve">
+    <value>-- kts</value>
+  </data>
+  <data name="Waypoint.WaypointDistanceSuffix" xml:space="preserve">
+    <value>NM</value>
+  </data>
+  <data name="Waypoint.WaypointGroundSource" xml:space="preserve">
+    <value>Ground elevation: Open-Elevation (https://open-elevation.com/)</value>
+  </data>
+  <data name="AutoLand.MapPoint.PA" xml:space="preserve">
+    <value>PA</value>
+  </data>
+  <data name="AutoLand.MapPoint.P1" xml:space="preserve">
+    <value>P1</value>
+  </data>
+  <data name="AutoLand.MapPoint.P2" xml:space="preserve">
+    <value>P2</value>
+  </data>
+  <data name="AutoLand.MapPoint.P3" xml:space="preserve">
+    <value>P3</value>
+  </data>
+  <data name="AutoLand.MapPoint.P4" xml:space="preserve">
+    <value>P4</value>
+  </data>
+  <data name="AutoLand.MapPoint.P5" xml:space="preserve">
+    <value>P5</value>
+  </data>
+  <data name="InfoDialog_Title" xml:space="preserve">
+    <value>About AutoFly</value>
+  </data>
+  <data name="InfoDialog_Close" xml:space="preserve">
+    <value>&amp;Close</value>
+  </data>
+  <data name="InfoDialog_CloseDescription" xml:space="preserve">
+    <value>Closes the information dialog and returns to AutoFly.</value>
+  </data>
+  <data name="InfoDialog_ContentDescription" xml:space="preserve">
+    <value>Information about AutoFly, the version and acknowledgements.</value>
+  </data>
+  <data name="InfoDialog_LinkError" xml:space="preserve">
+    <value>Could not open the website: {0}</value>
+  </data>
+  <data name="InfoDialog_Text" xml:space="preserve">
+    <value>AutoFly
 
 Version {{VERSION}}
 
@@ -333,7 +895,15 @@ https://pomax.github.io/are-we-flying
 
 Thanks for the support
 
-I would also like to thank GitHub Copilot Chat Agent GPT-6.1-Sol for supporting the development. Without this help, I would not have been able to create AutoFly either.</value></data>
-  <data name="Language_SettingsReadFailed" xml:space="preserve"><value>Could not load the language setting: {0}</value></data>
-  <data name="Language_SettingsWriteFailed" xml:space="preserve"><value>Could not save the language setting: {0}</value></data>
+I would also like to thank GitHub Copilot Chat Agent GPT-6.1-Sol for supporting the development. Without this help, I would not have been able to create AutoFly either.
+
+Freeware: Info to MASUSoftware@kabelmail.de
+</value>
+  </data>
+  <data name="Language_SettingsReadFailed" xml:space="preserve">
+    <value>Could not load the language setting: {0}</value>
+  </data>
+  <data name="Language_SettingsWriteFailed" xml:space="preserve">
+    <value>Could not save the language setting: {0}</value>
+  </data>
 </root>
