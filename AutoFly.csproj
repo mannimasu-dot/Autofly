@@ -64,6 +64,7 @@
 		<None Remove="ap_head.png" />
 		<None Remove="a_rose.png" />
 		<None Remove="favicon.ico" />
+		<None Remove="Flugzeuge mit JavaScript fliegen.pdf" />
 		<None Remove="gb-flag.png" />
 		<None Remove="gtt_file.png" />
 		<None Remove="i_rose.png" />
@@ -73,6 +74,7 @@
 		<None Remove="map.html" />
 		<None Remove="map_marker.png" />
 		<None Remove="plane.png" />
+		<None Remove="terrain_500_300.gtt" />
 		<EmbeddedResource Include="ap_head.png" />
 		<EmbeddedResource Include="a_rose.png" />
 		<EmbeddedResource Include="favicon.ico" />

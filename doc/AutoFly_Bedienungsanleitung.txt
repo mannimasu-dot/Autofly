@@ -1,0 +1,678 @@
+AutoFly – Anwendung, Bedienung und Programmablauf
+================================================
+
+Grundlage: aktueller Quellcode des Projekts AutoFly, Version 1.0.0.
+Zielgruppe: Anwender; ergänzt um kurze technische Erläuterungen.
+Diese Beschreibung wurde am Quellcode geprüft, nicht durch einen Testflug.
+Bei späteren Programmänderungen können Beschriftungen und Abläufe abweichen.
+
+INHALT
+1. Zweck und Voraussetzungen
+2. Überblick über das Hauptfenster
+3. Obere Werkzeugleiste
+4. Karte und Fluginstrumente
+5. Untere Werkzeugleiste und Flugregler
+6. Wegpunkte und Flugplan
+7. Auto-Höhe: geländeabhängige Höhenführung
+8. Auto-Start und Startprüfungsfenster
+9. Auto-Landung und Flughafenauswahl
+10. Flugzeug über die Karte versetzen
+11. Typischer Ablauf eines Fluges
+12. Meldungen, Grenzen und technische Komponenten
+
+
+1. ZWECK UND VORAUSSETZUNGEN
+--------------------------
+AutoFly ist ein Windows-Zusatzprogramm für Microsoft Flight Simulator.
+Die Oberfläche und Verbindungsanzeige beziehen sich auf MSFS 2024.
+Es empfängt Flugdaten über SimConnect, stellt Position und Fluglage auf
+einer Karte dar und kann selbst Steuerbefehle an das Flugzeug senden.
+
+Wesentliche Aufgaben:
+- Flugzeugposition, Flugspur, Höhe, Geschwindigkeit und Fluglage anzeigen.
+- Lokalen Autopiloten für Höhe, Kurs und Querlage bereitstellen.
+- Schub zur Reisegeschwindigkeitsregelung verändern.
+- Eine Wegpunktroute verwalten und abfliegen.
+- Die Zielhöhe an das Gelände anpassen.
+- Automatischen Start und automatische Landung unterstützen.
+- Das Flugzeug im Simulator an eine gewählte Kartenposition versetzen.
+
+Voraussetzungen:
+- Windows und die für die Anwendung benötigte .NET-10-Laufzeit.
+- Microsoft Edge WebView2 Runtime für die eingebettete Karte.
+- Laufender Simulator mit geladenem Flug und funktionierender SimConnect-
+  Verbindung sowie den mitgelieferten beziehungsweise benötigten DLLs.
+- Internetzugang für Kartenkacheln und externe Geländehöhenabfragen.
+- Gültige Flugzeug-, Triebwerks- und Modelldaten für die jeweiligen Regler.
+- Für die dateibasierte Geländeführung eine passende .gtt-Datei im
+  Programmverzeichnis sowie die Bibliothek GeoTerrain.Storage.
+
+Simulator zuerst starten und einen Flug laden, danach AutoFly öffnen.
+AutoFly versucht die Verbindung beim Programmstart selbst herzustellen;
+einen eigenen Verbinden-Button gibt es im Hauptfenster nicht.
+Ist der Simulator nicht erreichbar, erscheint ein Fehlerdialog und AutoFly
+beendet sich nach dessen Bestätigung. Bei Beendigung des Simulators wird
+auch die AutoFly-Verbindung abgebaut und die Anwendung geschlossen.
+
+AutoFly ist ausschließlich für den Simulator bestimmt. Die Automatik ist
+keine zertifizierte Flugsteuerung, Startleistungsprüfung oder ATC-Freigabe.
+Flug, Fluglage, Geschwindigkeit, Hindernisse und Bedienzustände überwachen.
+
+
+2. ÜBERBLICK ÜBER DAS HAUPTFENSTER
+--------------------------------
+Das Hauptfenster besteht aus vier Bereichen:
+
+Oben: Werkzeugleiste für Kartenmitte, Wegpunktroute, Sprache und Information.
+Mitte: Karte mit Flugzeug, Kompass, Flugspur und künstlichem Horizont.
+Unten: Werkzeugleiste für lokale Flugregler und Automatikfunktionen.
+Ganz unten: Statusleiste mit Verbindungs- und Fehlermeldungen.
+
+Zusatzanzeigen werden bei Bedarf eingeblendet oder geöffnet:
+- Prüfungsfenster bei blockiertem automatischem Start.
+- Flughafenauswahl für Auto-Landung.
+- Wegpunkteditor direkt über der Karte.
+- Kartenmenü zum Versetzen des Flugzeugs.
+- Informationsfenster sowie Datei- und Bestätigungsdialoge.
+
+Bei den schaltbaren Flugreglern bedeutet eine hellgrüne Schaltfläche
+normalerweise eingeschaltet, eine hellgraue ausgeschaltet. Eine grüne
+Schaltfläche ist jedoch keine Bestätigung, dass alle benötigten Daten
+vorliegen oder der gewünschte Flugzustand bereits erreicht ist.
+Ausgegraute, nicht bedienbare Elemente sind während einer Automatik gesperrt.
+Trennstriche gliedern die Werkzeugleisten und haben keine eigene Funktion.
+
+
+3. OBERE WERKZEUGLEISTE
+----------------------
+
+„Flugzeugposition:“
+  Beschriftung der nachfolgenden Kartenfunktion, kein Eingabefeld.
+
+„Karte-Mitte“
+  Schaltet die laufende Zentrierung auf das Flugzeug ein oder aus.
+  Eingeschaltet folgt der Kartenausschnitt den Positionsmeldungen.
+  Ausgeschaltet lässt sich die Umgebung betrachten, ohne bei jedem Update
+  wieder zum Flugzeug zurückgeführt zu werden. Die Flugzeuganzeige selbst
+  wird dadurch nicht abgeschaltet.
+
+„Flugplan (Wegpunkte):“
+  Kennzeichnet die folgenden Funktionen zur Routenverwaltung.
+
+„folgen“
+  Beginnt oder beendet die automatische Wegpunktverfolgung.
+  Beim Einschalten werden AP, ALT, HDG und LVL aktiviert; der Simulator-
+  Autopilot wird deaktiviert. Ohne Route oder notwendige Verbindung und
+  Telemetrie wird die Verfolgung nicht gestartet.
+  Ist kein aktives Ziel mehr vorhanden, beginnt die Route wieder am ersten
+  Wegpunkt. A/THR wird hierbei nicht automatisch eingeschaltet.
+  Erneutes Anklicken beendet die Routenverfolgung, nicht automatisch AP
+  oder die bereits eingeschalteten Einzelregler.
+
+„löschen“
+  Löscht nach Sicherheitsabfrage die gesamte Route und beendet das Folgen.
+  „Nein“ lässt die Route unverändert. Ein eventuell gesetzter
+  Wiederholungszustand wird beim Löschen ebenfalls aufgehoben.
+  Die lokalen Flugregler werden dadurch nicht insgesamt ausgeschaltet.
+
+„zurück“
+  Setzt den Routenfortschritt auf den ersten Wegpunkt zurück.
+  Wegpunktpositionen und Höhen bleiben erhalten. Es ist kein Rückflug-
+  Befehl und startet eine ausgeschaltete Verfolgung nicht automatisch.
+  Bei laufender Verfolgung wird der erste Wegpunkt wieder zum Ziel.
+
+„sichern“
+  Öffnet den Speicherdialog für eine Wegpunktdatei im JSON-Format.
+  Gesichert werden Positionen und Höhenangaben einschließlich vorhandener
+  Bodenabstände und gespeicherter Geländehöhen. Die Flugspur gehört nicht
+  zu dieser Routendatei.
+
+„laden“
+  Öffnet den Dateiauswahldialog und ersetzt die Route durch die geladene
+  JSON-Datei. Der Fortschritt wird zurückgesetzt; die Verfolgung startet
+  nicht automatisch und die Route wird ohne Wiederholung geladen.
+  Bei ungültigen Daten oder einem Lesefehler bleibt die bisherige Route
+  bestehen. Während des Ladens ist der Button vorübergehend gesperrt.
+
+Deutsche und englische Flagge
+  Schalten die Oberflächensprache zwischen Deutsch und Englisch um.
+  Auch Wegpunkt-Hinweise und der Wegpunkteditor werden übersetzt.
+  Die Sprachauswahl wird beim regulären Schließen gespeichert und beim
+  nächsten Start geladen. Ohne gespeicherte Auswahl ist Deutsch aktiv.
+
+„i“ – Information
+  Öffnet ein Informationsfenster mit Programmhinweisen und Versionsnummer.
+  Das Textfeld ist nicht zur Eingabe bestimmt. „Schließen“ beziehungsweise
+  Escape schließt das Fenster.
+
+
+4. KARTE UND FLUGINSTRUMENTE
+--------------------------
+
+Kartenfläche
+  Zeigt OpenStreetMap mit einer darübergelegten Geländeschummerung.
+  Kartenkacheln werden aus dem Internet geladen; die Kartenseite und ihre
+  Programmlogik sind in der Anwendung enthalten.
+  Mit gedrückter linker Maustaste lässt sich die Karte verschieben.
+  Mausrad und die Schaltflächen „+“ und „−“ verändern den Zoom.
+  Achtung: Ein einzelner Klick auf eine freie Kartenstelle legt einen
+  Wegpunkt an; dies ist nicht nur eine unverbindliche Positionsauswahl.
+
+Maßstab und Quellenangaben
+  Der Maßstab hilft bei der Entfernungseinschätzung und zeigt metrische
+  sowie nautische Entfernungen. Quellenangaben kennzeichnen die Anbieter
+  der Kartendaten; sie sind keine Flugregler.
+
+Flugzeugsymbol
+  Zeigt die gemeldete Position und Flugzeugausrichtung. Die Drehung richtet
+  sich vorzugsweise nach dem wahren Heading, ersatzweise dem magnetischen
+  Heading. Es zeigt damit die Ausrichtung, nicht zwingend den Kurs über
+  Grund bei Wind.
+
+Innere Kompassrose
+  Bleibt nach geografisch Nord ausgerichtet. Die Karte dreht nicht mit
+  jeder Kursänderung des Flugzeugs mit.
+
+Äußere Kompassrose
+  Berücksichtigt den Unterschied zwischen wahrem und magnetischem Kurs.
+  Dadurch lassen sich magnetische Kursvorgaben in der nordorientierten
+  Karte einordnen.
+
+Autopilot-Kursmarkierung
+  Kennzeichnet den lokalen Sollkurs. Im aktuellen Programm wird diese
+  Markierung entsprechend der magnetischen Kursvorgabe und, sofern
+  verfügbar, der Missweisung ausgerichtet. Sie ist keine Anzeige dafür,
+  dass der Autopilot tatsächlich eingeschaltet ist.
+
+Höhenanzeige oberhalb des Flugzeugs
+  Erster Wert: Höhe über Grund, AGL, in Fuß.
+  Wert in Klammern: vom Simulator gelieferte angezeigte Flughöhe
+  (INDICATED_ALTITUDE) in Fuß. Trotz des internen Namens „AMSL“ stammt
+  dieser Wert aus der Höhenmesseranzeige und ist nicht einfach mit einer
+  geometrischen Meereshöhe oder einer externen Geländehöhe gleichzusetzen.
+
+Geschwindigkeitsanzeige unterhalb des Flugzeugs
+  Zeigt die angezeigte Fluggeschwindigkeit IAS in Knoten, nicht die
+  Geschwindigkeit über Grund.
+
+Künstlicher Horizont rechts oben
+  Veranschaulicht Nicklage und Querneigung. Blau steht für Himmel, Braun
+  für Boden; Gehäuse und gelbe Markierung dienen der Lageorientierung.
+  Er ist eine zusätzliche grafische Anzeige, kein bedienbarer Regler.
+
+Blaue Flugspur
+  Verbindet die gemeldeten Flugzeugpositionen während der Sitzung.
+  Sie wird im Arbeitsspeicher geführt, nicht als Flugaufzeichnung auf
+  Festplatte gespeichert. Nicht mit den Wegpunkt-Verbindungslinien
+  verwechseln, die den geplanten Flugweg darstellen.
+
+Wegpunktmarkierungen
+  Zeigen Nummer, Entfernung vom vorherigen Wegpunkt in NM und verfügbare
+  Zielhöhe in ft. Am Routenanfang ohne Wiederholung beträgt die Entfernung
+  vom Vorgänger null. Aktives Ziel und erledigte Punkte werden optisch
+  unterschiedlich dargestellt. Der Hinweis beim Darüberfahren erläutert
+  die Höhenanzeige. „Höhe nicht verfügbar“ bedeutet fehlende Höhendaten,
+  nicht eine Zielhöhe von null Fuß.
+
+AutoLand-Markierungen
+  Bei geplanter Landung werden die Punkte PA und P1 bis P5 beschriftet.
+  Zusätzliche blaue Richtungspfeile zeigen den berechneten Einflugpfad.
+  Diese Markierungen sind von der frei bearbeitbaren Wegpunktroute getrennt.
+
+
+5. UNTERE WERKZEUGLEISTE UND FLUGREGLER
+-------------------------------------
+
+„AP“ – lokaler Autopilot
+  Hauptschalter der normalen lokalen Regelung. Beim Einschalten wird der
+  flugzeugeigene Simulator-Autopilot ausgeschaltet, damit nicht zwei
+  Systeme gegeneinander steuern.
+  AP allein wählt noch keine Höhen- oder Kursaufgabe. Die gewünschten
+  Einzelregler müssen ebenfalls eingeschaltet sein.
+  AP AUS unterbindet die normale lokale Regelung einschließlich A/THR;
+  einzelne Modusschalter können dabei weiterhin eingeschaltet erscheinen.
+  Ein laufender Spezialablauf ist über dessen eigenen Abbruchbutton zu
+  beenden; während solcher Abläufe kann AP gesperrt sein.
+
+„Zielhöhe:“ und Höhen-Eingabefeld
+  Sollhöhe für ALT in Fuß. Startwert des Feldes ist 3000.
+  Eingabe mit Enter übernehmen; bloßes Eintippen reicht nicht.
+  Der Wert wird auf ganze Fuß gerundet. Ungültige Eingaben werden nicht
+  als neuer Sollwert übernommen.
+  Gemeint ist die zur Höhenregelung verwendete angezeigte Flughöhe, nicht
+  direkt der Abstand über Grund.
+
+Linkspfeil „←“ neben der Höhe
+  Übernimmt die aktuell angezeigte Simulatorhöhe in das Höhenfeld und als
+  lokalen Sollwert. Hilfreich, um zunächst die momentane Höhe zu halten.
+
+„ALT“ – Höhenregelung
+  Fliegt die vorgegebene Höhe an und hält sie. Benötigt AP und gültige
+  Telemetrie. Bei Wegpunktverfolgung oder Auto-Höhe kann die Zielhöhe
+  automatisch geändert und im Eingabefeld aktualisiert werden.
+
+„ATT“ – Vertikalgeschwindigkeit beruhigen
+  Regelt ohne ALT auf etwa 0 ft/min; hält also nicht ausdrücklich eine
+  bestimmte Zielhöhe. ATT ist keine getrennte feste Nickwinkelvorgabe.
+  Sind ALT und ATT eingeschaltet, bleibt die Höhenvorgabe von ALT für die
+  Höhenregelung maßgeblich; die Schalter schließen sich nicht automatisch aus.
+
+„Zielkurs:“ und Kurs-Eingabefeld
+  Magnetischer Sollkurs in Grad. Startwert ist 0°.
+  Mit Enter übernehmen; der Wert wird gerundet und auf 0 bis 359°
+  normalisiert. 360° entspricht damit 0° beziehungsweise Nord.
+
+Linkspfeil „←“ neben dem Kurs
+  Übernimmt im aktuellen Quellcode den vom Simulator gelieferten
+  Autopilot-Kursvorwahlwert AUTOPILOT_HEADING_LOCK_DIR.
+  Wichtig: Trotz des Hinweises „Aktueller Kurs als Soll-Vorgabe“ wird hier
+  nicht unmittelbar das gemessene Flugzeug-Heading übernommen.
+
+„HDG“ – Kursführung
+  Bestimmt aus dem Fehler zum Sollkurs die erforderliche Querneigung.
+  Für wirksame Kursführung müssen AP, HDG und LVL eingeschaltet sein.
+  HDG allein ersetzt den Querneigungsregler nicht.
+
+„LVL“ – Querneigungsregelung
+  Ohne HDG: richtet die Tragflächen waagerecht aus, Sollbank 0°.
+  Mit HDG: regelt die von der Kursführung angeforderte Querneigung.
+  Waagerechte Tragflächen allein garantieren keinen bestimmten Kurs.
+
+„A/THR“ – automatische Schubregelung
+  Schaltet die normale lokale Geschwindigkeits-/Schubregelung ein oder aus.
+  Ziel ist die aus dem Flugzeugmodell gelieferte Reisegeschwindigkeit VC;
+  ein eigenes Geschwindigkeits-Eingabefeld gibt es nicht.
+  Benötigt AP sowie gültige IAS-, Gewichts-, Modell- und Triebwerksdaten.
+  ATT und LVL müssen dafür nicht eingeschaltet sein. Unterstützt in dieser
+  Regelung ein bis vier Triebwerke. A/THR AUS stellt den Schub nicht
+  automatisch auf Leerlauf; der vorhandene Schub ist manuell zu beachten.
+  Start- und Landeautomatik verwenden eigene Schubabläufe.
+
+„Auto-Höhe“
+  Startet oder beendet die geländeabhängige Vorgabe für ALT.
+  Einzelheiten und feste Bodenabstände stehen in Abschnitt 7.
+
+„Auto-Start“ / „Start abbrechen“
+  Startet die Startprüfung beziehungsweise bricht den aktiven Start ab.
+  Ablauf, Prüfungsfenster und Abbruchwirkung stehen in Abschnitt 8.
+
+„Auto-Landung“ / „Landung abbrechen“
+  Startet im Flug die Flughafensuche und automatische Landeplanung oder
+  beendet den aktiven Landevorgang. Einzelheiten stehen in Abschnitt 9.
+
+
+6. WEGPUNKTE UND FLUGPLAN
+------------------------
+Route anlegen und bearbeiten:
+1. Bei Bedarf „Karte-Mitte“ ausschalten und den Kartenausschnitt wählen.
+2. Mit einzelnen Linksklicks auf freie Kartenstellen Wegpunkte in der
+   gewünschten Reihenfolge hinzufügen.
+3. Einen Marker mit gedrückter Maustaste an eine neue Position ziehen.
+4. Einen Marker anklicken, um seinen Höheneditor zu öffnen.
+5. Die fertige Route über „sichern“ speichern.
+
+Neue Wegpunkte erhalten, soweit verfügbar, den aktuellen positiven
+Bodenabstand des Flugzeugs als Ausgangsvorgabe. Die Geländehöhe am Punkt
+wird separat abgefragt. Ohne gültige Daten kann die Höhe zunächst fehlen.
+Die absolute Zielhöhe ergibt sich bei AGL-Vorgabe aus Geländehöhe am
+Wegpunkt plus eingestelltem Bodenabstand. Es handelt sich nicht um eine
+laufende Abstandsmessung zum Gelände unter dem Flugzeug auf dem ganzen Leg.
+
+Wegpunkteditor – Komponenten:
+- Überschrift „Wegpunkt“ mit Nummer: kennzeichnet den bearbeiteten Punkt.
+- Feld „Bodenabstand (AGL) in ft“: gewünschter positiver Abstand über dem
+  Gelände genau an diesem Wegpunkt. Ein leeres Feld entfernt die explizite
+  AGL-Vorgabe; es ist keine Eingabe von null Fuß.
+- Hilfetext: erklärt den Höhenbezug und weist gegebenenfalls auf fehlende
+  Telemetrie hin.
+- Fehlerbereich: meldet ungültige Werte oder fehlgeschlagene Übernahme.
+- „Löschen“: entfernt diesen einzelnen Wegpunkt, nicht die ganze Route.
+- „Speichern“: übernimmt die Änderung; schließt nach erfolgreicher
+  Bestätigung. Das ist noch kein Speichern der ganzen Route auf Festplatte.
+- „Abbrechen“ beziehungsweise Escape: schließt ohne Übernahme der Eingabe.
+  Ein Klick außerhalb des Editors versucht dagegen, die Eingabe zu speichern.
+
+Während einer Übertragung sind Eingabe und Übernahmefunktionen kurzzeitig
+gesperrt. Beim Verschieben eines Wegpunkts müssen dessen Geländedaten zur
+neuen Position passen; bis zur Klärung kann die Zielhöhe unbekannt sein.
+
+Route abfliegen:
+1. Gültige Route erstellen oder „laden“.
+2. Flugzeug in einen geeigneten Flugzustand bringen und Daten abwarten.
+3. „folgen“ einschalten. AP, ALT, HDG und LVL werden aktiviert.
+4. Die angezeigten Sollwerte und den aktiven Wegpunkt überwachen.
+5. Für automatische Reisegeschwindigkeit A/THR bei Bedarf selbst einschalten.
+
+Der jeweils aktive Wegpunkt ist ein anzufliegender Zielpunkt, kein bloßer
+Leg-Anfang. Der Übergang zum Nachfolger berücksichtigt Geschwindigkeit,
+Modellwerte und Routengeometrie. Der Zielwechsel kann für eine geglättete
+Kurvenführung vor dem exakten Überfliegen erfolgen.
+Fehlen notwendige Modellgeschwindigkeiten, wird nicht stillschweigend mit
+einem vereinfachten Navigationsverfahren weitergerechnet.
+
+Hat ein Ziel keine bekannte Zielhöhe, liefert es keine neue Höhenvorgabe;
+der vorhandene ALT-Sollwert ist dann besonders zu beachten.
+Nach Ende einer nicht wiederholten Route wird keine automatische Landung
+ausgelöst und AP nicht allein deshalb ausgeschaltet. Es kommt kein neues
+Wegpunktziel hinzu; die vorhandenen Reglerzustände und Sollwerte beachten.
+Eine eigene sichtbare Schaltfläche zum Einschalten einer Rundkurs-
+Wiederholung ist im aktuellen Hauptfenster nicht vorhanden.
+
+„folgen“ AUS stoppt nur die Verfolgung. „zurück“ macht den ersten Punkt
+wieder zum Ziel. Laden und vollständiges Löschen beenden die Verfolgung,
+sind aber ebenfalls kein allgemeiner AP-Abschaltbefehl.
+
+
+7. AUTO-HÖHE: GELÄNDEABHÄNGIGE HÖHENFÜHRUNG
+-----------------------------------------
+Beim Einschalten beendet Auto-Höhe die Wegpunktverfolgung und aktiviert
+AP, ALT, HDG und LVL. War HDG vorher aus, wird nach Möglichkeit der aktuelle
+magnetische Flugzeugkurs als Ausgangsvorgabe übernommen.
+
+Die aktuellen Bodenabstände sind fest im Programm eingestellt:
+- Mit verwendbarer GTT-Dateiquelle: 1000 ft über der abgefragten Geländehöhe.
+- Nach erfolgreicher Suche ohne GTT-Datei: 2000 ft über der vom Simulator
+  gemeldeten Geländehöhe.
+Der beim Einschalten gerade geflogene AGL-Abstand wird in diesem Modus
+nicht als frei gewählter Abstand gespeichert. Dafür gibt es kein
+Eingabefeld im Hauptfenster.
+
+Dateiauswahl und Symbol:
+- Nach dem Anzeigen des Fensters wird im Programmverzeichnis nach *.gtt
+  gesucht; verwendet wird der erste Treffer ohne zusätzliche Sortierung.
+- Während der Suche ist kein Dateisymbol sichtbar.
+- Ein Dateisymbol am Button kennzeichnet einen gefundenen Dateipfad,
+  garantiert aber nicht die Vollständigkeit aller späteren Höhenabfragen.
+- Ohne Treffer bleibt der Button ohne Dateisymbol; ein fehlendes Symbol
+  allein unterscheidet nicht zwischen laufender Suche und fehlender Datei.
+
+Die GTT-Auswertung liest über GeoTerrain.Storage etwa 200 m in Flugrichtung
+voraus und bezieht seitliche Punkte jeweils rund 30 m daneben ein. Der
+höchste verfügbare Messwert dient als Geländebasis.
+Bei fehlenden Dateihöhen wird nicht einfach null Meter angenommen. Der
+bisherige Zielwert kann gehalten werden. Bei fehlgeschlagener Dateisuche
+ist ein Wechsel auf Simulatorgelände nicht generell gewährleistet.
+
+Höhere benötigte Zielhöhen werden unmittelbar freigegeben. Liegt das
+Flugzeug über dem niedrigeren Geländeziel, wartet die Sollwertabsenkung
+zunächst 30 Sekunden und führt dann bei konstantem Gelände über weitere
+60 Sekunden abwärts. Das beschreibt die Sollwertführung, nicht die
+Garantie, dass das Flugzeug die Höhe in dieser Zeit erreicht.
+
+Erneutes Anklicken schaltet Auto-Höhe aus; die zuvor aktivierten lokalen
+Regler bleiben bestehen. Das ist kein automatischer Wechsel zu Handflug.
+Wird anschließend „folgen“ aktiviert, während Auto-Höhe noch eingeschaltet
+ist, hat Auto-Höhe Vorrang vor den Wegpunkt-Höhenvorgaben. Für eine Route
+mit eigenen Höhen Auto-Höhe deshalb bewusst ausschalten.
+
+Geländedatei, externe Höhendaten, geometrische Flugzeughöhe und angezeigte
+Höhe können unterschiedliche Höhenbezüge besitzen. Daraus keine garantierte
+Hindernisfreiheit ableiten. Die wenigen vorausliegenden Messpunkte ersetzen
+keine vollständige Hindernis- oder Geländeprüfung.
+
+
+8. AUTO-START UND STARTPRÜFUNGSFENSTER
+------------------------------------
+Vorbereitung:
+1. Flugzeug auf einer geeigneten Startbahn aufstellen und ausrichten.
+2. Triebwerke starten und gültige aktuelle Flugdaten abwarten.
+3. „Auto-Start“ anklicken. Ein Start wird nur mit bestätigtem Bodenstatus,
+   Verbindung und verfügbarem lokalem Regler eingeleitet.
+4. Die Startprüfung und eventuelle Hinweise verfolgen.
+
+Die Startprüfung benötigt sechs bestandene Prüfungen:
+- Boden: gültiger Nachweis, dass das Flugzeug am Boden steht.
+- Aktuelle Telemetrie: erforderliche Daten sind vorhanden und frisch.
+- Triebwerke laufen: erforderliche Triebwerksdaten bestätigen den Betrieb.
+- Startprofil: verwendbare Modell-/Startgeschwindigkeitsdaten liegen vor.
+- Bahnposition: Position passt zu einer erkannten Startbahn.
+- Bahnkurs: Ausrichtung passt zur erkannten Bahnrichtung.
+Zusätzlich müssen technische Sperren, etwa ein noch eingeschalteter
+Simulator-Autopilot, aufgehoben sein. Die Bereitschaftsprüfung hat eine
+Zeitgrenze von 45 Sekunden. Vorherige konkurrierende Regler werden während
+des Startablaufs nicht als unabhängige Flugaufgaben weitergeführt.
+
+Fenster „Automatischer Start blockiert“:
+- Titel: zeigt an, dass keine Startfreigabe erreicht wurde.
+- Sechs Prüfzeilen: jeweils Prüfungsname und „Bestanden“/„Nicht bestanden“.
+- Informationsfeld: schreibgeschützte Fehlergründe sowie Flughafen- und
+  Bahndaten, soweit verfügbar. Dazu gehören Position, Höhe, Länge, Breite
+  und wahre Richtungen der Bahnen.
+- Bestätigungsbutton: quittiert die Meldung und beendet diesen blockierten
+  Startversuch. Er übergeht keine fehlgeschlagene Prüfung und ist keine
+  erzwungene Startfreigabe. Danach Ursache beheben und neu starten.
+
+Bei erfüllten Bedingungen läuft der aktuelle Start automatisch weiter:
+- Leistung aufbauen und die Startbahnmittellinie halten.
+- Bei gültiger Modell-Rotationsgeschwindigkeit VR die Rotation einleiten.
+- Abheben und Anfangssteigflug überwachen.
+- Bei der Übergabe um 200 ft AGL AP, HDG und LVL aktivieren und den
+  magnetischen Bahnkurs übernehmen.
+- In der anschließenden Überwachung Klappen ab 300 ft AGL einfahren;
+  auch das Fahrwerk wird über die vorgesehenen Nachlaufprüfungen behandelt.
+- Bei 500 ft AGL die feste Höhenruderführung lösen und ALT mit einer
+  Zielhöhe von 2000 ft angezeigter Höhe aktivieren, sofern die Bedingungen
+  für diese Nachlaufüberwachung weiterhin erfüllt sind.
+
+Wichtig: Die 2000 ft sind hier keine 2000 ft über dem Startplatz. Bei einem
+hoch gelegenen Flughafen die entstehende Zielhöhe besonders prüfen.
+Manuelle Modusänderungen oder ungültige Daten können die automatische
+Nachlaufumschaltung beenden. Die angezeigten Reglerzustände kontrollieren.
+
+Die aktuelle Implementierung hebt tatsächlich ab; es ist nicht mehr nur
+ein Beschleunigungsversuch mit planmäßigem Bremsen bei VR.
+Die Restbahnprüfung verwendet standardmäßig eine vorläufige Reserve von
+200 m. Diese Reserve ist keine berechnete Anhaltestrecke oder Garantie,
+dass bei jeder Masse, Oberfläche und Geschwindigkeit angehalten wird.
+
+Abbruch:
+„Start abbrechen“ beendet die Prüfung oder den aktiven Start.
+Am Boden werden Leerlauf und Bremsen bis zum bestätigten Stillstand
+angefordert. Nach der Rotation im Flug oder bei unklarem Bodenstatus ist
+unmittelbare manuelle Übernahme erforderlich; direkte Steuerachsen werden
+neutralisiert, ohne einen automatischen sicheren Flugzustand zu garantieren.
+Vorher aktive konkurrierende Modi werden nicht einfach wiederhergestellt.
+
+
+9. AUTO-LANDUNG UND FLUGHAFENAUSWAHL
+----------------------------------
+Auto-Landung beginnt nur im Flug. Sie beendet Wegpunktverfolgung und
+Auto-Höhe und übernimmt die dafür benötigten Flugsteuerungsfunktionen.
+Viele andere Eingaben und Reglerbuttons sind währenddessen gesperrt;
+„Landung abbrechen“ bleibt für den Abbruch verfügbar.
+
+Bedienablauf:
+1. Im Flug „Auto-Landung“ anklicken.
+2. Flughafensuche abwarten. Die Umgebungssuche kann in Schritten von
+   25, 50 und 100 NM erweitert werden.
+3. In der Auswahlliste einen geeigneten Flughafen markieren.
+4. Mit „OK“ bestätigen oder mit „Abbrechen“ beenden.
+5. Markierten Anflug, Sollwerte und tatsächlichen Flugverlauf überwachen.
+
+Komponenten der Flughafenauswahl:
+- Liste mit Einzelauswahl: verfügbare Flughäfen und nachgeladene Daten.
+- „Kennung“: Flughafenkennung, etwa ICAO.
+- „Flughafenname“: Klarname des Platzes.
+- „Distanz (NM)“: Entfernung zur Flugzeugposition bei der Suche.
+- „Längste Bahn (m)“: Länge der längsten nutzbaren Bahn in Metern.
+- „OK“: übernimmt die gewählte, ausreichend vollständig geladene Auswahl.
+  Eine markierte Zeile allein ersetzt keine gültigen Bahn- und Modelldaten.
+- „Abbrechen“ oder Fensterschließen: verwirft die Auswahl.
+
+Für die Auswahl wird die Simulation nach bestätigter Pause angehalten.
+War sie schon pausiert, wird dieser Zustand beim Schließen beibehalten;
+eine eigens vom Dialog gesetzte Pause wird wieder aufgehoben.
+
+Die Bahn wird automatisch gewählt: längste nutzbare Bahn; bei gleicher
+Länge entscheidet der näher gelegene Anflug zu P1. Die Richtung wird aus
+den berechneten Alternativen gewählt, nicht manuell in einem Kursfeld.
+Die Auswahl ist keine zugesicherte Gegenwind- oder Landestreckenprüfung.
+Wasserbahnen und die Flugzeugkategorie beeinflussen die Kandidatenfilterung.
+Hubschrauber können auch Plätze ohne Bahn in der Liste sehen; eine solche
+Anzeige bedeutet nicht, dass die hier beschriebene bahnbezogene Planung
+ohne Landebahn durchgeführt werden kann.
+
+Phasen des aktuellen Flugablaufs:
+- Planung: Flughafen, Bahnrichtung und Anflugprofil bestimmen.
+- Markierung: PA und P1 bis P5 sowie Einflugpfeile in der Karte anzeigen.
+- Ausrichten: dem berechneten Einflugpfad bis PA mit lokaler Kurs-, Höhen-
+  und Geschwindigkeitsführung folgen.
+- Ab PA: HDG und LVL für die direkte Querruderführung ausschalten;
+  der lokale AP-Hauptschalter bleibt in dieser Flugphase eingeschaltet.
+  Höhen-/Längsführung und Schub werden vom Landeablauf weitergeführt.
+- Anflug/Endanflug: Profil abfliegen sowie Klappen und Fahrwerk nach der
+  geschwindigkeits- und positionsabhängigen Ablaufsteuerung setzen.
+- Aufsetzen/Ausrollen: bei bestätigtem Bodenkontakt AP abschalten,
+  Bremsen anfordern und die Richtung zur Bahn über die Rollführung halten.
+- Abschluss: nach bestätigtem Stillstand auf der Bahn die Landung beenden,
+  Klappen einfahren und die automatische Flugführung freigeben/beenden.
+
+Bedeutung der Anflugpunkte im aktuellen Code:
+- PA: Einflug-/Ausrichtziel, 1500 ft über Bahnhöhe.
+- P1: 1500 ft über Bahnhöhe, 1 NM hinter PA in Anflugrichtung.
+- P2: 1,4 NM hinter P1; Höhe aus dem Sinkprofil zwischen P1 und P3.
+- P3: 500 ft über Bahnhöhe.
+- P4: Bahnanfang in 60 ft über Bahnhöhe.
+- P5: Bahnende auf Bahnhöhe.
+Die Profilhöhen werden für den Plan zur absoluten Bahnhöhe addiert.
+Die Steuerung berücksichtigt zwischen den markierten Punkten weitere
+Kurven-/Profilberechnungen; die Marker allein sind keine vollständige
+Beschreibung jedes Steuerbefehls.
+
+Abbruch und fehlende Daten:
+„Landung abbrechen“ beendet den Ablauf, gibt direkte Steuerachsen frei,
+entfernt die Anflugmarkierungen und stellt die Bedienbarkeit wieder her.
+Danach den tatsächlichen AP-/Reglerzustand und Schub prüfen und manuell
+übernehmen; es wird kein automatisches Durchstartmanöver zugesichert.
+Bei fehlenden Such-/Planungsdaten kann die Planung aktiv bleiben, bis sie
+ausdrücklich abgebrochen wird. Stillstand außerhalb der Bahn wird nicht
+als erfolgreiche Landung behandelt und beendet den Ablauf nicht zwingend.
+
+
+10. FLUGZEUG ÜBER DIE KARTE VERSETZEN
+-----------------------------------
+Ein Rechtsklick auf eine freie Kartenstelle öffnet das Menü
+„Flugzeug Position verschieben“. Dies verändert die Simulatorposition
+und ist nicht das Hinzufügen eines Wegpunkts.
+
+Menükomponenten:
+- Überschrift: kennzeichnet den Versetzvorgang.
+- Koordinaten: Breitengrad und Längengrad des angeklickten Ziels.
+- Hinweis-/Statusbereich: erklärt Zielhöhe, laufende Abfrage oder Fehler.
+- „Ausführen“: fragt die Geländehöhe ab und veranlasst das Versetzen.
+- Schließen-Symbol des Popups: schließt die Auswahl ohne Ausführung.
+  Auch ein Linksklick auf die Karte schließt ein offenes, nicht arbeitendes
+  Versetzmenü zunächst, statt dabei einen neuen Wegpunkt anzulegen.
+
+Voraussetzungen sind ein fliegendes Flugzeug, gültiger positiver AGL-
+Abstand und eine Simulatorverbindung. Während Auto-Start ist Versetzen
+gesperrt. Die Zielhöhe wird aus Gelände am Ziel plus bisherigem Bodenabstand
+berechnet. Fluglage und wahrer Kurs sollen erhalten bleiben; die IAS wird
+für den Simulatorbefehl auf ganze Knoten gerundet.
+
+Während der Übertragung pausieren die konkurrierenden lokalen
+Steuerbefehle. Die neue Position und Höhe werden über Simulatordaten
+bestätigt. Bei fehlender Bestätigung oder Fehlern Hinweise beachten;
+der lokale Autopilot kann vorsichtshalber ausgeschaltet werden.
+Die externe Geländehöhe stimmt nicht zwingend exakt mit der Simulator-
+Szenerie überein. Das Versetzen garantiert daher keine Hindernisfreiheit.
+
+
+11. TYPISCHER ABLAUF EINES FLUGES
+--------------------------------
+
+A. Einfacher Flug mit lokalem Autopiloten
+1. Simulator und Flug laden, AutoFly starten, Verbindung abwarten.
+2. Flugzeug zunächst manuell in eine geeignete stabile Fluglage bringen.
+3. Zielhöhe eingeben und Enter drücken oder die aktuelle Höhe übernehmen.
+4. Magnetischen Zielkurs eingeben und Enter drücken. Beim Kurs-Pfeil den
+   Unterschied zwischen Kursvorwahl und tatsächlichem Heading beachten.
+5. AP und ALT sowie für Kursführung HDG und LVL einschalten.
+6. Bei Bedarf A/THR aktivieren und die Geschwindigkeit überwachen.
+7. Zum Handflug AP ausschalten und gegebenenfalls laufende Spezial-
+   automatiken zuerst über deren Abbruchfunktion beenden.
+
+B. Flug entlang einer Route
+1. Route anklicken oder laden und Wegpunkthöhen prüfen.
+2. Auto-Höhe ausschalten, wenn die Wegpunkthöhen maßgeblich sein sollen.
+3. „folgen“ einschalten; bei Bedarf A/THR zusätzlich einschalten.
+4. Fortschritt und Sollwerte überwachen. Am Routenende selbst über
+   Weiterflug, Handflug oder Auto-Landung entscheiden.
+
+C. Geländeabhängiger Flug
+1. GTT-Verfügbarkeit und Datenabdeckung prüfen.
+2. „Auto-Höhe“ aktivieren, Kurs sowie festen Bodenabstand beachten.
+3. Gelände, Höhenbezug und tatsächlichen AGL-Abstand überwachen.
+4. Vor Rückkehr zu Wegpunkthöhen Auto-Höhe bewusst beenden.
+
+D. Automatischer Start mit anschließendem Weiterflug
+1. Auf der Bahn mit laufenden Triebwerken ausrichten.
+2. „Auto-Start“ aktivieren; blockierte Prüfung nicht übergehen.
+3. Startlauf, Rotation und Steigflug überwachen.
+4. Übergabe an AP/HDG/LVL und spätere ALT-Aktivierung prüfen.
+5. Erst danach weitere gewünschte Aufgaben wie Route oder Auto-Höhe wählen.
+
+E. Automatische Landung
+1. Im Flug „Auto-Landung“ anklicken und einen geeigneten Flughafen wählen.
+2. Nach Bestätigung Ausrichtung und Anflug überwachen.
+3. Bei Problemen „Landung abbrechen“ verwenden und manuell übernehmen.
+4. Nach erfolgreicher Landung Stillstand und freigegebene Bedienung prüfen.
+
+
+12. MELDUNGEN, GRENZEN UND TECHNISCHE KOMPONENTEN
+-----------------------------------------------
+
+Statusleiste
+  Meldet unter anderem Programmstart, Verbindungsaufbau, Verbindung zu MSFS,
+  Verbindungsabbau und Fehler bei Karte oder Datenempfang. Sie ist keine
+  vollständige Anzeige aller Automatikphasen und ersetzt keine Prüfung
+  der Schalter, Sollwerte und tatsächlichen Flugbewegung.
+
+Hinweis-, Fehler- und Dateidialoge
+  Datei öffnen/speichern: Pfad und Dateinamen wählen, mit Öffnen/Speichern
+  bestätigen oder abbrechen.
+  Route löschen: Ja löscht, Nein behält die Route.
+  Fehlerdialog: Meldung lesen und Ursache prüfen; Bestätigen repariert
+  weder Verbindung noch ungültige Flug-/Dateidaten.
+
+Technische Komponenten und ihre Aufgaben
+  AutoflyMain: Hauptfenster, Verbindungsverwaltung, Flugdaten und Bedienung.
+  SimConnect: Datenaustausch und Steuerbefehle zwischen AutoFly und MSFS.
+  Autopilot: lokale Höhen-, Kurs-, Querlage- und normale Schubregelung.
+  Waypoint/WaypointManager: Route, Fortschritt, Zielhöhen und Navigation
+	sowie die Anbindung des Karteneditors.
+  AutoTerrain/TerrainFollow: Geländequelle und daraus geführte ALT-Vorgabe.
+  GeoTerrain.Storage: Lesen und Abfragen der GTT-Geländedaten.
+  Autostart/AutoStartDialog: Startprüfung, Startsteuerung und Fehleranzeige.
+  AutoLand/AutoLandDialog: Landeplanung, Flughafenauswahl und Flugablauf.
+  AirportData: Flughafen-/Bahndaten für die entsprechenden Automatikaufgaben.
+  AircraftMove/ElevationClient: Versetzen und externe Geländehöhenabfragen.
+  WebView2/map.html/Leaflet: eingebettete Karte und grafische Fluginstrumente.
+  Sprachressourcen: deutsche und englische Oberflächentexte.
+
+Speicherung und Protokollierung
+  Wegpunktrouten werden ausdrücklich über „sichern“ als JSON gespeichert.
+  Die blaue Flugspur wird dadurch nicht gesichert.
+  Die Spracheinstellung liegt unter %LOCALAPPDATA%\AutoFly\language.txt.
+  Zahlreiche Diagnosemeldungen gehen in die Debug-Ausgabe, nicht in die
+  Statusleiste. Die Anwendung stellt dafür keinen eigenen Protokoll-
+  Viewer im Hauptfenster bereit.
+
+Wichtige Grenzen
+- Ein aktivierter Modus kann bei ungültigen oder fehlenden Daten keine
+  neuen Steuerbefehle berechnen. Grün bedeutet nicht „Ziel erreicht“.
+- Joystick-/Hardwareeingaben und andere Autopiloten können mit der lokalen
+  Regelung konkurrieren. Nicht gleichzeitig widersprüchlich steuern.
+- Angezeigte Höhe, geometrische Höhe, AGL und externe Geländehöhe sind
+  verschiedene Größen; Höhenmesser-/Geländebezug bewusst unterscheiden.
+- Start- und Landeautomatik nicht als Garantie für jedes Flugzeugmodell,
+  jede Bahn, jedes Wetter oder jede Situation verstehen.
+- Das Beenden von „folgen“ oder Auto-Höhe schaltet nicht automatisch alle
+  lokalen Flugregler aus. Den tatsächlichen Bedienzustand immer prüfen.
+- Ein Landeabbruch ist keine automatische Durchstartfunktion.
+- Diese Anleitung beschreibt den derzeitigen Implementierungsstand.
+  Ältere Hilfetexte können insbesondere zur Startübergabe abweichende
+  Höhen oder Zielwerte nennen; hier wurden die aktuellen Steuerpfade
+  und nicht allein die vorhandenen Tooltips zugrunde gelegt.
+
+Ende der Beschreibung.

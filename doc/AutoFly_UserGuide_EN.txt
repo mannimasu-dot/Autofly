@@ -1,0 +1,685 @@
+AutoFly – Application, Operation and Program Workflow
+====================================================
+
+Based on the current source code of the AutoFly project, version 1.0.0.
+Audience: users, with brief technical explanations.
+English translation of AutoFly_Bedienungsanleitung.txt.
+This description was checked against the source code, not by a test flight.
+Labels and workflows may change in later versions of the application.
+Control names below follow the English user interface.
+
+CONTENTS
+1. Purpose and requirements
+2. Main window overview
+3. Top toolbar
+4. Map and flight instruments
+5. Bottom toolbar and flight controllers
+6. Waypoints and flight plan
+7. Auto-Altitude: terrain-dependent altitude guidance
+8. Auto-Takeoff and the readiness check panel
+9. Auto-Landing and airport selection
+10. Relocating the aircraft using the map
+11. Typical flight workflow
+12. Messages, limitations and technical components
+
+
+1. PURPOSE AND REQUIREMENTS
+---------------------------
+AutoFly is a Windows companion application for Microsoft Flight Simulator.
+The interface and connection display refer to MSFS 2024.
+It receives flight data through SimConnect, displays position and attitude
+on a map, and can send its own control commands to the aircraft.
+
+Main functions:
+- Display aircraft position, flight trail, altitude, airspeed and attitude.
+- Provide a local autopilot for altitude, heading and bank control.
+- Adjust thrust to regulate cruise airspeed.
+- Manage and follow a waypoint route.
+- Adjust target altitude to the terrain.
+- Support automatic takeoff and automatic landing.
+- Relocate the aircraft in the simulator to a selected map position.
+
+Requirements:
+- Windows and the .NET 10 runtime required by the application.
+- Microsoft Edge WebView2 Runtime for the embedded map.
+- A running simulator with a loaded flight, a working SimConnect connection
+  and the supplied or otherwise required DLLs.
+- Internet access for map tiles and external terrain elevation queries.
+- Valid aircraft, engine and model data for the respective controllers.
+- For file-based terrain guidance, a suitable .gtt file in the application
+  directory and the GeoTerrain.Storage library.
+
+Start the simulator and load a flight before opening AutoFly.
+AutoFly attempts to connect automatically at startup; there is no separate
+Connect button in the main window.
+If the simulator cannot be reached, an error dialog appears and AutoFly
+exits after it is acknowledged. When the simulator exits, AutoFly also
+closes its connection and shuts down.
+
+AutoFly is intended exclusively for use with the simulator. Its automation
+is not a certified flight control system, takeoff performance assessment
+or ATC clearance. Monitor the flight, attitude, airspeed, obstacles and
+control states at all times.
+
+
+2. MAIN WINDOW OVERVIEW
+-----------------------
+The main window consists of four areas:
+
+Top: toolbar for map centering, waypoint routes, language and information.
+Center: map with the aircraft, compass, flight trail and artificial horizon.
+Bottom: toolbar for local flight controllers and automatic functions.
+At the very bottom: status bar with connection and error messages.
+
+Additional panels and dialogs appear when needed:
+- Readiness check panel when automatic takeoff is blocked.
+- Airport selection for Auto-Landing.
+- Waypoint editor displayed over the map.
+- Map menu for relocating the aircraft.
+- Information window, file dialogs and confirmation dialogs.
+
+For switchable flight controllers, a light-green button normally means on
+and a light-gray button means off. However, a green button does not confirm
+that all required data is available or that the requested flight state
+has already been reached.
+Grayed-out, unavailable controls are locked during an automatic procedure.
+Separators divide the toolbars into groups and have no function of their own.
+
+
+3. TOP TOOLBAR
+---------------
+
+“Aircraft position:”
+  Label for the following map function, not an input field.
+
+“Center map”
+  Toggles continuous centering on the aircraft.
+  When enabled, the map view follows incoming position updates.
+  When disabled, you can inspect the surrounding area without being taken
+  back to the aircraft with every update. The aircraft display itself
+  remains active.
+
+“Flight plan (waypoints):”
+  Identifies the following route management functions.
+
+“follow”
+  Starts or stops automatic waypoint tracking.
+  Enabling it activates AP, ALT, HDG and LVL and disables the simulator's
+  autopilot. Tracking does not start without a route and the necessary
+  connection and telemetry.
+  If there is no active target left, the route starts again at the first
+  waypoint. A/THR is not enabled automatically.
+  Clicking again stops route tracking, but does not automatically switch
+  off AP or the individual controllers that are already enabled.
+
+“clear”
+  Deletes the entire route after confirmation and stops tracking.
+  “No” leaves the route unchanged. Any repeat state is also cleared.
+  This does not switch off all local flight controllers.
+
+“reset”
+  Resets route progress to the first waypoint.
+  Waypoint positions and altitudes are retained. This is not a command
+  to fly back and does not automatically start tracking if it is off.
+  If tracking is running, the first waypoint becomes the target again.
+
+“save”
+  Opens the save dialog for a waypoint file in JSON format.
+  Positions and altitude settings are saved, including existing heights
+  above ground and stored terrain elevations. The flight trail is not
+  part of this route file.
+
+“load”
+  Opens the file selection dialog and replaces the route with the loaded
+  JSON file. Progress is reset; tracking does not start automatically
+  and the route is loaded without repetition.
+  Invalid data or a read error leaves the existing route unchanged.
+  The button is temporarily disabled while loading.
+
+German and English flags
+  Switch the interface language between German and English.
+  Waypoint hints and the waypoint editor are translated as well.
+  The selected language is saved when the application closes normally
+  and restored at the next startup. German is the default when no
+  selection has been saved.
+
+“i” – Information
+  Opens an information window with application notes and the version number.
+  Its text area is not an input field. “Close” or Escape closes the window.
+
+
+4. MAP AND FLIGHT INSTRUMENTS
+----------------------------
+
+Map area
+  Displays OpenStreetMap with a terrain hillshade overlay.
+  Map tiles are downloaded from the Internet; the map page and its program
+  logic are embedded in the application.
+  Hold the left mouse button and drag to pan the map.
+  The mouse wheel and the “+” and “−” buttons change the zoom level.
+  Important: a single click on an empty map location creates a waypoint;
+  it is not merely a temporary position selection.
+
+Scale and attribution
+  The scale helps estimate distances and shows metric and nautical units.
+  Attribution identifies the map data providers; these are not flight
+  controls.
+
+Aircraft symbol
+  Shows the reported position and aircraft orientation. Rotation uses
+  true heading when available, otherwise magnetic heading. It therefore
+  shows the aircraft's orientation, not necessarily its ground track
+  in the presence of wind.
+
+Inner compass rose
+  Remains aligned with geographic north. The map does not rotate with
+  every change in the aircraft's heading.
+
+Outer compass rose
+  Accounts for the difference between true and magnetic heading.
+  This allows magnetic heading targets to be interpreted on the north-up
+  map.
+
+Autopilot heading marker
+  Indicates the local target heading. In the current application, this
+  marker is aligned according to the magnetic target heading and, when
+  available, magnetic declination. It does not indicate whether the
+  autopilot is actually enabled.
+
+Altitude display above the aircraft
+  First value: height above ground, AGL, in feet.
+  Value in parentheses: indicated altitude supplied by the simulator
+  (INDICATED_ALTITUDE), in feet. Despite the internal name “AMSL”, this
+  value comes from the altimeter indication and must not simply be equated
+  with geometric altitude above sea level or an external terrain elevation.
+
+Airspeed display below the aircraft
+  Shows indicated airspeed, IAS, in knots, not ground speed.
+
+Artificial horizon at the top right
+  Illustrates pitch and bank. Blue represents sky and brown represents
+  ground; the housing and yellow marker provide attitude references.
+  This is an additional graphical display, not an interactive controller.
+
+Blue flight trail
+  Connects reported aircraft positions during the session.
+  It is held in memory, not saved to disk as a flight recording.
+  Do not confuse it with the waypoint connection lines, which represent
+  the planned route.
+
+Waypoint markers
+  Show the waypoint number, distance from the previous waypoint in NM
+  and available target altitude in ft. At the start of a non-repeating
+  route, the distance from the predecessor is zero.
+  The active target and completed points have different visual styles.
+  The hover hint explains the altitude display. “Altitude unavailable”
+  means altitude data is missing, not that the target altitude is zero feet.
+
+AutoLand markers
+  When a landing is planned, points PA and P1 through P5 are labeled.
+  Additional blue direction arrows show the calculated entry path.
+  These markers are separate from the freely editable waypoint route.
+
+
+5. BOTTOM TOOLBAR AND FLIGHT CONTROLLERS
+---------------------------------------
+
+“AP” – local autopilot
+  Master switch for normal local control. Enabling it switches off the
+  aircraft's simulator autopilot to prevent two systems from competing.
+  AP alone does not select an altitude or heading task. The required
+  individual controllers must also be enabled.
+  AP OFF prevents normal local control, including A/THR; individual mode
+  switches may still appear enabled.
+  End a running special procedure using its own abort button; AP may be
+  locked while such a procedure is active.
+
+“Target altitude:” and altitude input field
+  Target altitude for ALT in feet. The field initially contains 3000.
+  Press Enter to apply an entry; simply typing a value is not sufficient.
+  The value is rounded to whole feet. Invalid entries are not applied
+  as a new target.
+  This is the indicated altitude used by altitude control, not directly
+  the height above ground.
+
+Left arrow “←” next to the altitude
+  Copies the simulator's current indicated altitude into the altitude
+  field and the local target. Useful for initially holding the current
+  altitude.
+
+“ALT” – altitude control
+  Flies to and holds the selected altitude. Requires AP and valid telemetry.
+  During waypoint tracking or Auto-Altitude, the target altitude can be
+  changed automatically and updated in the input field.
+
+“ATT” – vertical speed stabilization
+  Without ALT, regulates vertical speed toward approximately 0 ft/min;
+  it does not explicitly hold a particular target altitude.
+  ATT is not a separate fixed pitch-angle setting.
+  If ALT and ATT are both enabled, the ALT target remains authoritative
+  for altitude control; the switches are not mutually exclusive.
+
+“Target heading:” and heading input field
+  Magnetic target heading in degrees. The initial value is 0°.
+  Press Enter to apply it; the value is rounded and normalized to
+  0 through 359°. Thus, 360° corresponds to 0°, or north.
+
+Left arrow “←” next to the heading
+  In the current source code, copies the simulator's autopilot heading
+  selector value AUTOPILOT_HEADING_LOCK_DIR.
+  Important: despite the tooltip “Use current heading as target”, this
+  does not directly copy the aircraft's measured heading.
+
+“HDG” – heading guidance
+  Determines the required bank angle from the target heading error.
+  Effective heading guidance requires AP, HDG and LVL to be enabled.
+  HDG alone does not replace the bank controller.
+
+“LVL” – bank control
+  Without HDG: levels the wings, with a target bank of 0°.
+  With HDG: controls the bank requested by heading guidance.
+  Level wings alone do not guarantee a particular heading.
+
+“A/THR” – automatic thrust control
+  Enables or disables normal local airspeed/thrust control.
+  Its target is the cruise speed VC supplied by the aircraft model;
+  there is no separate airspeed input field.
+  Requires AP and valid IAS, weight, model and engine data.
+  ATT and LVL do not have to be enabled. This controller supports one
+  to four engines. Switching A/THR OFF does not automatically set idle
+  thrust; check the existing thrust setting manually.
+  Automatic takeoff and landing use their own thrust procedures.
+
+“Auto-Altitude”
+  Starts or stops terrain-dependent target altitude generation for ALT.
+  See section 7 for details and the fixed ground clearances.
+
+“Auto-Takeoff” / “Abort takeoff”
+  Starts the takeoff readiness check or aborts the active takeoff.
+  See section 8 for the procedure, readiness panel and abort behavior.
+
+“Auto-Landing” / “Abort landing”
+  Starts the airport search and automatic landing planning while airborne,
+  or ends the active landing procedure. See section 9 for details.
+
+
+6. WAYPOINTS AND FLIGHT PLAN
+----------------------------
+Creating and editing a route:
+1. If necessary, switch off “Center map” and choose the map area.
+2. Add waypoints in the desired order by single left-clicking empty
+   locations on the map.
+3. Drag a marker to a new position while holding the mouse button.
+4. Click a marker to open its altitude editor.
+5. Save the completed route using “save”.
+
+When available, new waypoints initially receive the aircraft's current
+positive height above ground. Terrain elevation at the point is queried
+separately. Without valid data, altitude may initially be unavailable.
+For an AGL setting, the absolute target altitude is the terrain elevation
+at the waypoint plus the selected ground clearance. This is not a
+continuous clearance measurement to the terrain beneath the aircraft
+along the entire leg.
+
+Waypoint editor components:
+- “Waypoint” heading with a number: identifies the point being edited.
+- “Height above ground (AGL) in ft” field: desired positive clearance
+  above the terrain at that exact waypoint. Leaving it empty removes
+  the explicit AGL setting; it does not enter a value of zero feet.
+- Help text: explains the altitude reference and, where applicable,
+  indicates missing telemetry.
+- Error area: reports invalid values or a failed update.
+- “Delete”: removes this individual waypoint, not the entire route.
+- “Save”: applies the change and closes after successful confirmation.
+  This does not yet save the whole route to disk.
+- “Cancel” or Escape: closes without applying the entry.
+  Clicking outside the editor, however, attempts to save the entry.
+
+Input and apply functions are briefly disabled during an update.
+When moving a waypoint, its terrain data must match the new location;
+its target altitude may remain unknown until this is resolved.
+
+Following a route:
+1. Create a valid route or use “load”.
+2. Establish a suitable aircraft flight state and wait for data.
+3. Enable “follow”. AP, ALT, HDG and LVL are activated.
+4. Monitor the displayed targets and the active waypoint.
+5. Enable A/THR separately if automatic cruise airspeed control is desired.
+
+The active waypoint is a target to be flown toward, not merely the start
+of a leg. Transition to the successor accounts for airspeed, model data
+and route geometry. For smoother turn guidance, the target can change
+before the aircraft passes directly over the waypoint.
+If required model speeds are missing, navigation does not silently
+continue using a simplified fallback method.
+
+A target without a known target altitude supplies no new altitude command;
+pay particular attention to the existing ALT target in this case.
+Completing a non-repeating route does not trigger an automatic landing
+or, by itself, switch off AP. No new waypoint target is added; check the
+existing controller states and targets.
+There is no dedicated visible button in the current main window for
+enabling repeated circuit navigation.
+
+Switching “follow” OFF only stops tracking. “reset” makes the first point
+the target again. Loading or clearing the entire route stops tracking,
+but neither is a general AP OFF command.
+
+
+7. AUTO-ALTITUDE: TERRAIN-DEPENDENT ALTITUDE GUIDANCE
+---------------------------------------------------
+Enabling Auto-Altitude stops waypoint tracking and activates AP, ALT,
+HDG and LVL. If HDG was previously off, the current magnetic aircraft
+heading is used as the initial target when available.
+
+The current ground clearances are fixed in the program:
+- With a usable GTT file source: 1000 ft above the queried terrain elevation.
+- After a successful search finds no GTT file: 2000 ft above the terrain
+  elevation reported by the simulator.
+In this mode, the AGL clearance being flown at activation is not stored
+as a freely selected clearance. There is no input field for that in the
+main window.
+
+File selection and icon:
+- After the window is shown, the application directory is searched for
+  *.gtt; the first match is used without additional sorting.
+- No file icon is visible while the search is running.
+- A file icon on the button indicates that a file path was found, but
+  does not guarantee complete data for every subsequent elevation query.
+- If no file is found, the button remains without a file icon; the absence
+  of an icon alone does not distinguish an ongoing search from a missing file.
+
+GTT evaluation uses GeoTerrain.Storage to query approximately 200 m ahead
+in the direction of travel, including points around 30 m to either side.
+The highest available reading provides the terrain reference.
+Missing file elevations are not simply treated as zero meters.
+The previous target may be held. If the file search fails, switching to
+simulator terrain is not generally guaranteed.
+
+Higher required target altitudes are released immediately. If the aircraft
+is above the lower terrain target, target reduction first waits 30 seconds
+and then descends over a further 60 seconds when terrain is constant.
+This describes target generation, not a guarantee that the aircraft will
+reach the altitude within that time.
+
+Clicking again switches Auto-Altitude off; the previously activated local
+controllers remain enabled. This is not an automatic return to manual flight.
+If “follow” is subsequently enabled while Auto-Altitude is still on,
+Auto-Altitude takes priority over waypoint altitude settings. Explicitly
+switch Auto-Altitude off for a route whose own altitudes should apply.
+
+Terrain files, external elevation data, geometric aircraft altitude and
+indicated altitude may use different vertical references. Do not infer
+guaranteed obstacle clearance from them. The small number of points ahead
+does not replace a complete obstacle or terrain assessment.
+
+
+8. AUTO-TAKEOFF AND THE READINESS CHECK PANEL
+--------------------------------------------
+Preparation:
+1. Position and align the aircraft on a suitable runway.
+2. Start the engines and wait for valid, current flight data.
+3. Click “Auto-Takeoff”. Takeoff is initiated only with confirmed ground
+   status, a connection and an available local controller.
+4. Monitor the readiness check and any messages.
+
+The readiness check requires six successful checks:
+- Aircraft on the ground: valid confirmation of ground contact.
+- Current telemetry: required data is available and fresh.
+- Engines running: required engine data confirms operation.
+- Takeoff profile: usable model/takeoff speed data is available.
+- Runway position: position matches a recognized runway.
+- Runway heading: alignment matches the recognized runway direction.
+Technical interlocks must also be cleared, for example a simulator
+autopilot that is still enabled. The readiness check has a 45-second
+time limit. Previously active competing controllers do not continue
+as independent flight tasks during the takeoff procedure.
+
+“Automatic takeoff blocked:” panel:
+- Title: indicates that takeoff readiness has not been achieved.
+- Six check rows: each shows the check name and “Passed”/“Failed”.
+- Information field: read-only failure reasons and available airport/runway
+  data, including position, elevation, length, width and true headings.
+- Acknowledgment button “OK”: acknowledges the message and ends this
+  blocked takeoff attempt. It does not override a failed check or force
+  takeoff approval. Correct the cause before starting a new attempt.
+
+When the conditions are met, the current takeoff continues automatically:
+- Build thrust and maintain the runway centerline.
+- Initiate rotation at the valid model rotation speed VR.
+- Monitor liftoff and initial climb.
+- At handover around 200 ft AGL, activate AP, HDG and LVL and adopt
+  the magnetic runway heading.
+- During subsequent monitoring, retract flaps from 300 ft AGL;
+  landing gear is also handled by the designated follow-up checks.
+- At 500 ft AGL, release the fixed elevator command and activate ALT
+  with a target indicated altitude of 2000 ft, provided the conditions
+  for this follow-up monitoring remain satisfied.
+
+Important: 2000 ft here does not mean 2000 ft above the departure field.
+At a high-elevation airport, check the resulting target altitude carefully.
+Manual mode changes or invalid data can stop the automatic follow-up
+switching. Check the displayed controller states.
+
+The current implementation actually takes off; it is no longer merely
+an acceleration test with planned braking at VR.
+The remaining-runway check uses a provisional reserve of 200 m by default.
+This is not a calculated stopping distance or a guarantee of stopping
+at every weight, surface condition and speed.
+
+Abort:
+“Abort takeoff” ends the check or active takeoff.
+On the ground, idle thrust and braking are requested until a complete stop
+is confirmed. After rotation, if airborne or if ground status is uncertain,
+immediate manual takeover is required; direct control axes are neutralized
+without guaranteeing an automatically safe flight state.
+Previously active competing modes are not simply restored.
+
+
+9. AUTO-LANDING AND AIRPORT SELECTION
+-------------------------------------
+Auto-Landing starts only while airborne. It stops waypoint tracking and
+Auto-Altitude and takes over the flight control functions it needs.
+Many other inputs and controller buttons are locked during the procedure;
+“Abort landing” remains available.
+
+Operating procedure:
+1. Click “Auto-Landing” while airborne.
+2. Wait for the airport search. The surrounding-area search can expand
+   in steps of 25, 50 and 100 NM.
+3. Select a suitable airport in the list.
+4. Confirm with “OK” or exit with “Cancel”.
+5. Monitor the marked approach, targets and actual flight path.
+
+Airport selection components:
+- Single-selection list: available airports and data loaded subsequently.
+- “Identifier”: airport identifier, such as ICAO.
+- “Airport name”: the airport's full name.
+- “Distance (NM)”: distance from the aircraft position at search time.
+- “Longest runway (m)”: length of the longest usable runway in meters.
+- “OK”: accepts the selected airport if sufficient data has been loaded.
+  Selecting a row alone does not replace valid runway and model data.
+- “Cancel” or closing the window: discards the selection.
+
+The simulator is paused for selection after pause confirmation.
+If already paused, that state is retained when the dialog closes;
+a pause specifically set by the dialog is released again.
+
+The runway is selected automatically: the longest usable runway; for
+equal lengths, the nearer approach to P1 decides. The direction is chosen
+from the calculated alternatives, not entered manually in a heading field.
+This selection is not a guaranteed headwind or landing-distance assessment.
+Water runways and aircraft category affect candidate filtering.
+Helicopters may also see airports without a runway in the list; this does
+not mean that the runway-based planning described here can be performed
+without an actual runway.
+
+Phases of the current flight procedure:
+- Planning: determine the airport, runway direction and approach profile.
+- Marking: display PA and P1 through P5 and entry arrows on the map.
+- Alignment: follow the calculated entry path to PA using local heading,
+  altitude and airspeed guidance.
+- From PA: switch off HDG and LVL for direct aileron guidance;
+  the local AP master remains enabled during this flight phase.
+  The landing procedure continues altitude/longitudinal and thrust control.
+- Approach/final approach: follow the profile and set flaps and landing
+  gear according to the speed- and position-dependent procedure.
+- Touchdown/rollout: after confirmed ground contact, switch AP off,
+  request braking and maintain runway direction using rollout guidance.
+- Completion: after confirmed standstill on the runway, finish the landing,
+  retract flaps and release/end automatic flight guidance.
+
+Meaning of approach points in the current code:
+- PA: entry/alignment target, 1500 ft above runway elevation.
+- P1: 1500 ft above runway elevation, 1 NM beyond PA toward the runway.
+- P2: 1.4 NM beyond P1; altitude derived from the descent profile
+  between P1 and P3.
+- P3: 500 ft above runway elevation.
+- P4: runway threshold, 60 ft above runway elevation.
+- P5: runway end, at runway elevation.
+For planning, these relative heights are added to the absolute runway
+elevation. Between the marked points, control uses additional curve and
+profile calculations; the markers alone do not describe every command.
+
+Abort and missing data:
+“Abort landing” ends the procedure, releases direct control axes, removes
+the approach markers and restores the controls.
+Afterward, check the actual AP/controller states and thrust and take over
+manually; an automatic go-around is not guaranteed.
+If search/planning data is missing, planning may remain active until it
+is explicitly aborted. Standstill outside the runway is not treated as
+a successful landing and does not necessarily end the procedure.
+
+
+10. RELOCATING THE AIRCRAFT USING THE MAP
+----------------------------------------
+Right-clicking an empty map location opens the “Move aircraft position”
+menu. This changes the simulator position; it does not add a waypoint.
+
+Menu components:
+- Heading: identifies the relocation operation.
+- Coordinates: latitude and longitude of the selected destination.
+- Help/status area: explains target altitude, a running query or errors.
+- “Execute”: queries terrain elevation and initiates relocation.
+- Popup close icon: closes the selection without executing it.
+  A left click on the map also first closes an open, idle relocation
+  menu rather than adding a new waypoint at that time.
+
+Requirements are an airborne aircraft, a valid positive AGL clearance
+and a simulator connection. Relocation is blocked during Auto-Takeoff.
+Target altitude is calculated as terrain elevation at the destination
+plus the previous height above ground. Attitude and true heading are
+intended to be retained; IAS is rounded to whole knots for the simulator
+command.
+
+Competing local control commands are suspended during the transfer.
+The new position and altitude are confirmed using simulator data.
+If confirmation is missing or errors occur, follow the messages;
+the local autopilot may be switched off as a precaution.
+External terrain elevation does not necessarily match the simulator's
+scenery exactly. Relocation therefore does not guarantee obstacle clearance.
+
+
+11. TYPICAL FLIGHT WORKFLOW
+---------------------------
+
+A. Simple flight using the local autopilot
+1. Start the simulator and load a flight, launch AutoFly and wait for
+   the connection.
+2. Initially establish a suitable stable attitude manually.
+3. Enter a target altitude and press Enter, or copy the current altitude.
+4. Enter a magnetic target heading and press Enter. When using the heading
+   arrow, distinguish between the heading selector and actual heading.
+5. Enable AP and ALT, plus HDG and LVL for heading guidance.
+6. Enable A/THR if required and monitor airspeed.
+7. For manual flight, switch AP off; first end any special automatic
+   procedure using its own abort function if necessary.
+
+B. Flying a route
+1. Create a route by clicking the map or load one, and check waypoint
+   altitudes.
+2. Switch Auto-Altitude off if waypoint altitudes should be authoritative.
+3. Enable “follow”; enable A/THR separately if required.
+4. Monitor progress and targets. At the end of the route, decide whether
+   to continue flying, take over manually or use Auto-Landing.
+
+C. Terrain-dependent flight
+1. Check GTT availability and data coverage.
+2. Enable Auto-Altitude and note the heading and fixed ground clearance.
+3. Monitor terrain, altitude references and actual AGL clearance.
+4. Explicitly end Auto-Altitude before returning to waypoint altitudes.
+
+D. Automatic takeoff followed by continued flight
+1. Align on the runway with the engines running.
+2. Enable Auto-Takeoff; do not bypass a blocked check.
+3. Monitor the takeoff roll, rotation and climb.
+4. Check handover to AP/HDG/LVL and subsequent ALT activation.
+5. Only then select further tasks such as route tracking or Auto-Altitude.
+
+E. Automatic landing
+1. Click Auto-Landing while airborne and select a suitable airport.
+2. After confirmation, monitor alignment and approach.
+3. If problems occur, use “Abort landing” and take over manually.
+4. After a successful landing, check standstill and that controls have
+   been released.
+
+
+12. MESSAGES, LIMITATIONS AND TECHNICAL COMPONENTS
+-------------------------------------------------
+
+Status bar
+  Reports application startup, connection setup, connection to MSFS,
+  disconnection, and map or data reception errors, among other messages.
+  It is not a complete display of all automatic phases and does not
+  replace checking switches, targets and actual aircraft motion.
+
+Information, error and file dialogs
+  Open/save file: choose the path and file name, confirm with Open/Save
+  or cancel.
+  Clear route: Yes deletes the route, No retains it.
+  Error dialog: read the message and investigate the cause; acknowledging
+  it repairs neither the connection nor invalid flight/file data.
+
+Technical components and their responsibilities
+  AutoflyMain: main window, connection management, flight data and operation.
+  SimConnect: data exchange and control commands between AutoFly and MSFS.
+  Autopilot: local altitude, heading, bank and normal thrust control.
+  Waypoint/WaypointManager: route, progress, target altitudes and navigation,
+	plus integration with the map editor.
+  AutoTerrain/TerrainFollow: terrain source and resulting ALT target guidance.
+  GeoTerrain.Storage: reading and querying GTT terrain data.
+  Autostart/AutoStartDialog: takeoff checks, takeoff control and error display.
+  AutoLand/AutoLandDialog: landing planning, airport selection and procedure.
+  AirportData: airport/runway data for the respective automatic tasks.
+  AircraftMove/ElevationClient: relocation and external terrain elevation
+	queries.
+  WebView2/map.html/Leaflet: embedded map and graphical flight instruments.
+  Language resources: German and English interface text.
+
+Storage and logging
+  Waypoint routes are explicitly saved as JSON using “save”.
+  This does not save the blue flight trail.
+  The language preference is stored in
+  %LOCALAPPDATA%\AutoFly\language.txt.
+  Many diagnostic messages go to Debug output, not the status bar.
+  The application does not provide a dedicated log viewer in the main
+  window.
+
+Important limitations
+- An enabled mode cannot calculate new control commands if required data
+  is invalid or missing. Green does not mean “target reached”.
+- Joystick/hardware input and other autopilots can compete with local
+  control. Avoid simultaneous conflicting commands.
+- Indicated altitude, geometric altitude, AGL and external terrain elevation
+  are different quantities; distinguish altimeter and terrain references.
+- Automatic takeoff and landing are not guarantees for every aircraft
+  model, runway, weather condition or situation.
+- Ending “follow” or Auto-Altitude does not automatically switch off all
+  local flight controllers. Always check the actual control state.
+- Aborting a landing is not an automatic go-around function.
+- This guide describes the current implementation. Older help text may
+  specify different altitudes or targets, particularly for takeoff
+  handover; this description follows the current control paths rather
+  than relying solely on the existing tooltips.
+
+End of guide.
