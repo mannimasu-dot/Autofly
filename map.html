@@ -1,0 +1,531 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>__AF_MAP_TITLE__</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="leaflet.css" />
+  <style>
+    html, body, #map { height: 100%; width: 100%; margin: 0; padding: 0; position: absolute; top: 0; left: 0; }
+    .icon-wrap { width: 160px; height: 160px; position: relative; pointer-events: none; background: transparent; }
+
+    /* äußere Rose (a_rose.png) */
+    .rose-img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(0deg); transform-origin: 50% 50%; width: 160px; height: 160px; z-index: 0; pointer-events: none; }
+    
+    /* innere Rose (i_rose.png) - statisch, North-Up (125px) */
+    .inner-rose { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(0deg); transform-origin: 50% 50%; width: 125px; height: 125px; z-index: 1; pointer-events: none; }
+
+    /* Höhen-Anzeige: oberhalb der äußeren Rose, mittig, Schriftgröße 16 fett */
+    .altitude-wrap { position: absolute; left: 50%; top: -10%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; color: black; z-index: 2; pointer-events: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; text-align: center; }
+
+    .alt-agl { display: inline-block; }
+    .alt-amsl { display: inline-block; }
+
+    /* Speed-Anzeige: mittig unter der äußeren Rose, Schriftgröße 16 fett */
+    .speed-label { position: absolute; left: 50%; top: 110%; transform: translate(-50%, -50%); font-size: 16px; line-height: 1; color: black; font-weight: bold; z-index: 2; pointer-events: none; }
+
+    /* Flugzeug: rotiert (true bevorzugt, sonst mag) und liegt oben */
+    .plane-img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(0deg); transform-origin: center center; width: 160px; height: 160px; z-index: 3; pointer-events: none; }
+
+    /* Autopilot image: über den Rosen, unter dem Flugzeug */
+    .ap-img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(0deg); transform-origin: 50% 50%; width: 160px; height: 160px; z-index: 4; pointer-events: none; }
+
+    /* Trail style (Polyline fallback) */
+    .flight-trail { stroke-width: 3; opacity: 0.9; stroke: blue; }
+
+    .autoland-triangle { background: transparent; border: 0; }
+    .autoland-triangle span { display: block; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 9px solid black; }
+    .autoland-label { color: black; font-weight: bold; background: transparent; border: 0; box-shadow: none; padding: 0; }
+    .autoland-label.leaflet-tooltip-right { margin-left: 0; }
+    .autoland-label::before { display: none; }
+    .autoland-entry-arrow { background: transparent; border: 0; }
+    .autoland-entry-arrow span { display: block; width: 12px; height: 14px; background: #2878c8; clip-path: polygon(50% 0, 100% 100%, 50% 73%, 0 100%); transform-origin: center; }
+
+    /* Attitude Indicator wrapper (rechts oben, 20px Abstand) */
+    .att-wrapper {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 250px;
+      height: 250px;
+      z-index: 10000;
+      pointer-events: none;
+      display: block;
+    }
+    /* housing image scaled to 250x250 */
+    .att-housing {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 250px;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+	  z-index: 2;
+    }
+    /* canvas overlay same size */
+    .att-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 250px;
+      pointer-events: none;
+	  z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Attitude Indicator: housing + canvas overlay -->
+  <div class="att-wrapper" id="att-wrapper">
+    <img id="k-hor" class="att-housing" src="k_hor.png" alt="__AF_MAP_HORIZON__" />
+    <canvas id="att-canvas" class="att-canvas" width="250" height="250"></canvas>
+  </div>
+
+  <script src="leaflet.js"></script>
+  <script>
+    const mapTexts = __AF_MAP_TEXTS_JSON__;
+    function escapeMapText(value) {
+      const span = document.createElement('span');
+      span.textContent = value;
+      return span.innerHTML.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+    }
+    // Karte initialisieren
+    L.Control.Zoom.mergeOptions({ zoomInTitle: mapTexts.ZoomIn, zoomOutTitle: mapTexts.ZoomOut });
+    const map = L.map('map').setView([51.505, -0.09], 13);
+    map.on('popupopen', event => {
+      const close = event.popup.getElement()?.querySelector('.leaflet-popup-close-button');
+      if (close) {
+        close.title = mapTexts.ClosePopup;
+        close.setAttribute('aria-label', mapTexts.ClosePopup);
+      }
+    });
+
+    const autoLandLayer = L.layerGroup().addTo(map);
+    let autoLandSession = 0;
+    let autoLandCancelledSession = 0;
+
+    window.setAutoLandMarkers = function (session, points, arrows = []) {
+      if (session <= autoLandCancelledSession || session < autoLandSession) return false;
+      autoLandLayer.clearLayers();
+      autoLandSession = session;
+      arrows.forEach((arrow, index) => {
+        if (index % 2 !== 0) return;
+        L.marker([arrow.lat, arrow.lon], {
+          icon: L.divIcon({ className: 'autoland-entry-arrow',
+            html: '<span style="transform:rotate(' + Number(arrow.heading) + 'deg)"></span>',
+            iconSize: [12, 14], iconAnchor: [6, 7] }),
+          interactive: false, keyboard: false, zIndexOffset: -100
+        }).addTo(autoLandLayer);
+      });
+      points.forEach(point => {
+        const marker = L.marker([point.lat, point.lon], {
+          icon: L.divIcon({ className: 'autoland-triangle', html: '<span></span>', iconSize: [10, 9], iconAnchor: [5, 5] }),
+          interactive: false, keyboard: false
+        }).addTo(autoLandLayer);
+        const label = document.createElement('span');
+        label.textContent = point.label;
+        marker.bindTooltip(label, { permanent: true, direction: 'right', offset: [7, 0], className: 'autoland-label' });
+      });
+      return true;
+    };
+
+    window.clearAutoLandMarkers = function (session) {
+      autoLandCancelledSession = Math.max(autoLandCancelledSession, session);
+      if (autoLandSession <= session) autoLandLayer.clearLayers();
+      return true;
+    };
+
+    // OpenStreetMap mit beschriftungsfreier Geländeschummerung kombinieren.
+    const hillshadePane = map.createPane('hillshade');
+    hillshadePane.style.zIndex = '250';
+    hillshadePane.style.mixBlendMode = 'multiply';
+    hillshadePane.style.pointerEvents = 'none';
+
+    const sources = [
+      {
+        name: 'openStreetMap',
+        url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        maxZoom: 19,
+        attribution: {
+          url: 'http://www.openstreetmap.org/copyright',
+          label: mapTexts.OpenStreetMap
+        }
+      },
+      {
+        name: 'hillshade',
+        pane: 'hillshade',
+        url: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+        maxNativeZoom: 16,
+        maxZoom: 20,
+        attribution: {
+          url: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer',
+          label: mapTexts.Hillshade
+        }
+      }
+    ];
+
+    const mapLayers = Object.fromEntries(
+      sources.map(e => [
+        e.name,
+        L.tileLayer(e.url, {
+          subdomains: e.subdomains ?? [],
+          pane: e.pane ?? 'tilePane',
+          maxZoom: e.maxZoom,
+          maxNativeZoom: e.maxNativeZoom ?? e.maxZoom,
+          attribution: `© <a href="${e.attribution.url}">${escapeMapText(e.attribution.label)}</a>`
+        })
+      ])
+    );
+
+    mapLayers.openStreetMap.setOpacity(1);
+    mapLayers.openStreetMap.addTo(map);
+    mapLayers.hillshade.setOpacity(0.5);
+    mapLayers.hillshade.addTo(map);
+
+    // Nautical scale plugin (unverändert)
+    (function() {
+      if (!L || !L.Control || !L.Control.Scale) return;
+
+      L.Control.ScaleNautical = L.Control.Scale.extend({
+        options: { nautical: false },
+
+        _addScales: function (options, className, container) {
+          L.Control.Scale.prototype._addScales.call(this, options, className, container);
+          L.setOptions(this, options);
+          if (this.options.nautical) {
+            this._nScale = L.DomUtil.create('div', className, container);
+          }
+        },
+
+        _updateScales: function (maxMeters) {
+          L.Control.Scale.prototype._updateScales.call(this, maxMeters);
+          if (this.options.nautical && maxMeters) {
+            this._updateNautical(maxMeters);
+          }
+        },
+
+        _updateNautical: function (maxMeters) {
+          if (!this._nScale) return;
+          const maxNauticalMiles = maxMeters / 1852;
+          let nauticalMiles;
+          if (maxMeters >= 1852) {
+            nauticalMiles = L.Control.Scale.prototype._getRoundNum.call(this, maxNauticalMiles);
+          } else {
+            nauticalMiles = maxNauticalMiles.toFixed(maxNauticalMiles > 0.1 ? 1 : 0);
+          }
+          const scaleWidth = (this.options.maxWidth * (nauticalMiles / maxNauticalMiles)).toFixed(0);
+          this._nScale.style.width = (Math.max(0, Number(scaleWidth) - 10)) + 'px';
+          this._nScale.textContent = `${nauticalMiles} ${mapTexts.NauticalMiles}`;
+        }
+      });
+
+      L.control.scaleNautical = function (options) { return new L.Control.ScaleNautical(options); };
+
+      window.setMapScale = function(map, metric = true, imperial = false, nautical = true) {
+        if (!map || !L) return;
+        L.control.scaleNautical({ metric: metric, imperial: imperial, nautical: nautical }).addTo(map);
+      };
+    })();
+
+    if (typeof setMapScale === 'function') setMapScale(map);
+
+    /* ---------- In-memory Trail (keine Persistenz) ---------- */
+    window.trailPoints = [];
+    window._trailLine = null;
+
+    window.startTrail = function(lat, lon, color = 'blue') {
+      if (window._trailLine) {
+        try { map.removeLayer(window._trailLine); } catch(e) {}
+        window._trailLine = null;
+      }
+      window.trailPoints = [];
+      if (isFinite(lat) && isFinite(lon)) {
+        window.trailPoints.push([Number(lat), Number(lon)]);
+        window._trailLine = L.polyline(window.trailPoints, { color: color, weight: 3, opacity: 0.9, className: 'flight-trail' }).addTo(map);
+      }
+    };
+
+    window.addTrailPointLocal = function(lat, lon) {
+      if (!isFinite(lat) || !isFinite(lon)) return;
+      const p = [Number(lat), Number(lon)];
+      window.trailPoints.push(p);
+      if (!window._trailLine) {
+        window._trailLine = L.polyline(window.trailPoints, { color: 'blue', weight: 3, opacity: 0.9, className: 'flight-trail' }).addTo(map);
+      } else {
+        window._trailLine.addLatLng(p);
+      }
+    };
+
+    window.clearTrail = function() {
+      if (window._trailLine) { try { map.removeLayer(window._trailLine); } catch(e) {} window._trailLine = null; }
+      window.trailPoints = [];
+    };
+    window.exportTrailJson = function() { return JSON.stringify(window.trailPoints); };
+    window.getTrailLength = function() { return window.trailPoints.length; };
+
+    /* ---------------- Artificial Horizon (Attitude Indicator) ---------------- */
+    (function() {
+      const canvas = document.getElementById('att-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+
+      // center relative to canvas top-left
+      const centerX = 125;
+      const centerY = 125;
+
+      // halb so groß: diameter 160 -> radius 80
+      const radius = 80;
+      const skyColor = 'rgb(135,206,235)'; // circle background
+      const fillColor = 'rgb(160,82,45)';  // fill from bottom to top
+      const triangleColor = 'yellow';
+      const pixelsPerDegree = 4; // 5° => 20px => 4px / degree
+
+      let pitchDeg = 0.0;
+      let bankDeg = 0.0;
+      let pending = false;
+
+      function clearCanvas() { ctx.clearRect(0, 0, W, H); }
+
+      function drawHorizonNow() {
+        pending = false;
+        clearCanvas();
+        ctx.save();
+
+        // translate to center and rotate by bank
+        ctx.translate(centerX, centerY);
+        const bankRad = (bankDeg * 2.2 * Math.PI) / 180.0;
+        ctx.rotate(bankRad);
+
+        // clip to circle
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+
+        // fill background (sky)
+        ctx.fillStyle = skyColor;
+        ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
+
+        // compute fill amount (from bottom up)
+        let fillAmount = radius + (pitchDeg * pixelsPerDegree);
+        if (fillAmount < 0) fillAmount = 0;
+        if (fillAmount > radius * 2) fillAmount = radius * 2;
+
+        const rectTop = radius - fillAmount;
+
+        // draw fill (ground) from rectTop to bottom
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(-radius, rectTop, radius * 2, radius * 2 - rectTop);
+
+        // circle outline
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // yellow triangle near top inside circle (~15 px from top)
+        const triOffsetFromTop = 8;
+        const triY = -radius + triOffsetFromTop;
+        const triSize = 10;
+        ctx.fillStyle = triangleColor;
+        ctx.beginPath();
+        ctx.moveTo(0, triY);
+        ctx.lineTo(-triSize, triY + 12);
+        ctx.lineTo(triSize, triY + 12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // debounce draws to avoid blocking map interactions
+      function scheduleDraw() {
+        if (pending) return;
+        pending = true;
+        window.requestAnimationFrame(drawHorizonNow);
+      }
+
+      window.setHorizonPitch = function(p) {
+        pitchDeg = Number(p) || 0;
+        scheduleDraw();
+      };
+
+      window.setHorizonBank = function(b) {
+        let bn = Number(b) || 0;
+        bn = ((bn + 180) % 360) - 180;
+        bankDeg = bn;
+        scheduleDraw();
+      };
+
+      window.setHorizon = function(p, b) {
+        pitchDeg = Number(p) || 0;
+        let bn = Number(b) || 0;
+        bn = ((bn + 180) % 360) - 180;
+        bankDeg = bn;
+        scheduleDraw();
+      };
+
+      // initial draw
+      drawHorizonNow();
+    })();
+    // -----------------------------------------------------------------------
+
+    /* Plane marker, headings, speed, altitude, autopilot (unverändert) */
+    const planeIcon = L.divIcon({
+      html: `<div class="icon-wrap">
+               <img src="a_rose.png" class="rose-img" alt="${escapeMapText(mapTexts.OuterRose)}" />
+               <img src="i_rose.png" class="inner-rose" alt="${escapeMapText(mapTexts.InnerRose)}" />
+               <div class="altitude-wrap"><span class="alt-agl">${escapeMapText(mapTexts.AltitudeMissing)}</span><span class="alt-amsl">(${escapeMapText(mapTexts.AltitudeMissing)})</span></div>
+               <div class="speed-label">${escapeMapText(mapTexts.SpeedMissing)}</div>
+               <img src="ap_head.png" class="ap-img" alt="${escapeMapText(mapTexts.AutopilotCourse)}" />
+               <img src="plane.png" class="plane-img" alt="${escapeMapText(mapTexts.Plane)}" />
+             </div>`,
+      className: 'plane-div-icon',
+      iconSize: [160, 160],
+      iconAnchor: [80, 80]
+    });
+
+    let planeMarker = null;
+    let currentMag = null;
+    let currentTrue = null;
+    let lastApMag = null;
+    let lastSpeedKts = null;
+    let lastAltAGL = null;
+    let lastAltAMSL = null;
+
+    function norm360(v) { const n = Number(v) || 0; return ((n % 360) + 360) % 360; }
+
+    function applyPlaneRotation(root) {
+      if (!root) return;
+      const plane = root.querySelector('.plane-img');
+      let angle = null;
+      if (currentTrue != null) angle = norm360(currentTrue);
+      else if (currentMag != null) angle = norm360(currentMag);
+      if (plane && angle != null) plane.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'deg)';
+    }
+
+    function applyOuterRose(root) {
+      if (!root) return;
+      const rose = root.querySelector('.rose-img');
+      if (!rose) return;
+      if (currentTrue == null || currentMag == null) { rose.style.transform = 'translate(-50%, -50%) rotate(0deg)'; return; }
+      let d = ((currentTrue - currentMag + 540) % 360) - 180;
+      rose.style.transform = 'translate(-50%, -50%) rotate(' + d + 'deg)';
+    }
+
+    function applySpeed(root) {
+      if (!root) return;
+      const lbl = root.querySelector('.speed-label');
+      if (!lbl) return;
+      if (lastSpeedKts == null) { lbl.textContent = mapTexts.SpeedMissing; return; }
+      const v = Math.round(Number(lastSpeedKts));
+      lbl.textContent = v.toString() + ' ' + mapTexts.Knots;
+    }
+
+    function applyAltitude(root) {
+      if (!root) return;
+      const agl = root.querySelector('.alt-agl');
+      const amsl = root.querySelector('.alt-amsl');
+      if (!agl || !amsl) return;
+      if (lastAltAGL == null) agl.textContent = mapTexts.AltitudeMissing; else agl.textContent = Math.round(Number(lastAltAGL)).toString() + ' ' + mapTexts.Feet;
+      if (lastAltAMSL == null) amsl.textContent = '(' + mapTexts.AltitudeMissing + ')'; else amsl.textContent = '(' + Math.round(Number(lastAltAMSL)).toString() + ' ' + mapTexts.Feet + ')';
+    }
+
+    function applyAutopilotRotation(root) {
+      if (!root) return;
+      const ap = root.querySelector('.ap-img');
+      if (!ap) return;
+      if (lastApMag == null) return;
+      let angle;
+      if (currentTrue != null && currentMag != null) angle = norm360(lastApMag + (currentTrue - currentMag));
+      else angle = norm360(lastApMag);
+      ap.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'deg)';
+    }
+
+    window.updatePlane = function(lat, lng, heading, centerMap) {
+      const latN = Number(lat);
+      const lngN = Number(lng);
+      if (!isFinite(latN) || !isFinite(lngN)) return;
+
+      currentMag = norm360(heading);
+
+      if (!planeMarker) {
+        planeMarker = L.marker([latN, lngN], { icon: planeIcon }).addTo(map);
+        startTrail(latN, lngN, 'blue');
+        const root = planeMarker._icon;
+        if (root) { applyPlaneRotation(root); applyOuterRose(root); applyAltitude(root); applySpeed(root); applyAutopilotRotation(root); }
+        if (centerMap === true || centerMap === 'true') map.setView([latN, lngN]);
+        return;
+      }
+
+      planeMarker.setLatLng([latN, lngN]);
+      addTrailPointLocal(latN, lngN);
+
+      const root = planeMarker._icon;
+      if (root) { applyPlaneRotation(root); applyOuterRose(root); applyAltitude(root); applySpeed(root); applyAutopilotRotation(root); }
+
+      if (centerMap === true || centerMap === 'true') map.panTo([latN, lngN], { animate: true, duration: 0.8 });
+    };
+
+    window.setTrueHeading = function(deg) {
+      currentTrue = norm360(deg);
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applyPlaneRotation(root); applyOuterRose(root); applyAutopilotRotation(root);
+    };
+
+    window.setMagneticHeading = function(deg) {
+      currentMag = norm360(deg);
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applyPlaneRotation(root); applyOuterRose(root); applyAutopilotRotation(root);
+    };
+
+    window.setAutopilotCourse = function(magCourse) {
+      const mag = Number(magCourse);
+      if (!isFinite(mag)) return;
+      lastApMag = norm360(mag);
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applyAutopilotRotation(root);
+    };
+
+    window.setSpeedKts = function(kts) {
+      const v = Number(kts);
+      if (!isFinite(v)) return;
+      lastSpeedKts = v;
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applySpeed(root);
+    };
+
+    window.setAltitudeAGL = function(ft) {
+      const v = Number(ft);
+      if (!isFinite(v)) return;
+      lastAltAGL = v;
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applyAltitude(root);
+    };
+
+    window.setAltitudeAMSL = function(ft) {
+      const v = Number(ft);
+      if (!isFinite(v)) return;
+      lastAltAMSL = v;
+      if (!planeMarker) return;
+      const root = planeMarker._icon; if (!root) return;
+      applyAltitude(root);
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+	<AutoFlyTestArchiveItems>**\*.Tests\**\*;**\Tests\**\*;**\*.cs.test;doc\Altitude*;doc\Heading*</AutoFlyTestArchiveItems>
+	<DefaultItemExcludes>$(DefaultItemExcludes);$(AutoFlyTestArchiveItems)</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64</Platforms>
+	  <Version>1.0.0</Version>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+	<FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>	
+<PropertyGroup>
+  <ApplicationIcon>Plane.ico</ApplicationIcon>
+</PropertyGroup>
+<ItemGroup>
+  <None Include="Plane.ico" />
+</ItemGroup>	
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1370.28" />
+  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="GeoTerrain.Storage">
+			<HintPath>C:\Users\manfr\source\repos\Geo-Importer\GeoTerrain.Storage\bin\Debug\net10.0\GeoTerrain.Storage.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>	
+  <ItemGroup>
+	<EmbeddedResource Update="Resources_DE.resx">
+	  <LogicalName>AutoFly.Resources_DE.resources</LogicalName>
+	</EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	<Reference Include="Microsoft.FlightSimulator.SimConnect">
+	  <HintPath>$(MSBuildThisFileDirectory)Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+	<None Update="SimConnect.dll">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	</None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".github\" />
+    <Folder Include="Models\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+		<!-- Verhindert, dass alle .cs-Dateien im Ordner SimvarWatcher kompiliert werden -->
+		<Compile Remove="SimvarWatcher\**\*.cs" />
+		<Compile Remove="IasProtection.cs" />
+		<Compile Remove="PidController.cs" />
+		<None Remove="ap_head.png" />
+		<None Remove="a_rose.png" />
+		<None Remove="favicon.ico" />
+		<None Remove="gb-flag.png" />
+		<None Remove="gtt_file.png" />
+		<None Remove="i_rose.png" />
+		<None Remove="k_hor.png" />
+		<None Remove="leaflet.css" />
+		<None Remove="leaflet.js" />
+		<None Remove="map.html" />
+		<None Remove="map_marker.png" />
+		<None Remove="plane.png" />
+		<EmbeddedResource Include="ap_head.png" />
+		<EmbeddedResource Include="a_rose.png" />
+		<EmbeddedResource Include="favicon.ico" />
+		<EmbeddedResource Include="gtt_file.png" />
+		<EmbeddedResource Include="i_rose.png" />
+		<EmbeddedResource Include="k_hor.png" />
+		<EmbeddedResource Include="leaflet.css" />
+		<EmbeddedResource Include="leaflet.js" />
+		<EmbeddedResource Include="map.html" />
+		<EmbeddedResource Include="map_marker.png" />
+		<EmbeddedResource Include="plane.png" />
+		<None Update="SimvarWatcher\**\*.*">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+  </ItemGroup>	
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Muss zuletzt bleiben: SDK-None-Reinclusion und spätere explizite Includes dürfen Testarchive nicht einbinden. -->
+  <ItemGroup>
+	<Compile Remove="$(AutoFlyTestArchiveItems)" />
+	<None Remove="$(AutoFlyTestArchiveItems)" />
+	<Content Remove="$(AutoFlyTestArchiveItems)" />
+	<EmbeddedResource Remove="$(AutoFlyTestArchiveItems)" />
+	<ProjectReference Remove="$(AutoFlyTestArchiveItems)" />
+	<ProjectReference Remove="..\Geo-Importer\GeoTerrain.Storage\GeoTerrain.Storage.csproj" />
+	<ProjectReference Remove="C:\Users\manfr\source\repos\Geo-Importer\GeoTerrain.Storage\GeoTerrain.Storage.csproj" />
+	<Folder Remove="$(AutoFlyTestArchiveItems)" />
+  </ItemGroup>
+</Project>
