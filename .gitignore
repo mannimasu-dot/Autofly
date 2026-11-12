@@ -28,6 +28,14 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+# Include the requested release output, but not WebView2's local browser profile.
+![Bb]in/
+[Bb]in/*
+![Bb]in/x64/
+[Bb]in/x64/*
+![Bb]in/x64/Release/
+[Bb]in/x64/Release/*
+![Bb]in/x64/Release/net10.0-windows/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
@@ -365,3 +373,8 @@ FodyWeavers.xsd
 terrain_500_300.gtt
 
 Flugzeuge mit JavaScript fliegen.pdf
+
+# Track the runnable Release output, but not terrain data or local WebView2 state.
+!bin/x64/Release/net10.0-windows/**
+bin/x64/Release/net10.0-windows/terrain_500_300.gtt
+bin/x64/Release/net10.0-windows/AutoFly.exe.WebView2/
